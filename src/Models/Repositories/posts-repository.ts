@@ -1,7 +1,8 @@
 import { getPostViewModel } from '../../helpers/getPostViewModel'
 import { PostViewModel } from '../PostModels/PostViewModel'
+import { blogs } from './blogs-repository'
 
-let posts: PostViewModel[] = [
+export let posts: PostViewModel[] = [
   {
     id: '1',
     title: 'Title 1',
@@ -37,13 +38,14 @@ export const postsRepository = {
     return posts.find(p => p.id === id)
   },
   createPost(title: string, shortDescription: string, content: string, blogId: string): PostViewModel {
+    const findBlogName = blogs.find(b => b.id === blogId)
     const createdPost: PostViewModel = {
       id: new Date().toISOString(),
       title,
       shortDescription,
       content,
       blogId,
-      blogName: 'Blog 1',
+      blogName: findBlogName?.name,
     }
     posts.push(createdPost)
     return getPostViewModel(createdPost)

@@ -1,7 +1,7 @@
 import { getBlogViewModel } from '../../helpers/getBlogViewModel'
 import { BlogViewModel } from '../BlogModels/BlogViewModel'
 
-let blogs: BlogViewModel[] = [
+export let blogs: BlogViewModel[] = [
   {
     id: '1',
     name: 'Blog 1',

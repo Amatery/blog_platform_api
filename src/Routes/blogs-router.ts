@@ -1,6 +1,7 @@
 import { Response, Router } from 'express'
-import { body } from 'express-validator'
 import { STATUS_CODES } from '../helpers/StatusCodes'
+import { authMiddleware } from '../middlewares/auth-middleware'
+import { validateDescription, validateName, validateWebsiteUrl } from '../middlewares/blogs-body-validators'
 import { inputValidationMiddleware } from '../middlewares/input-validation-middleware'
 import { BlogInputModel } from '../Models/BlogModels/BlogInputModel'
 import { BlogQueryModel } from '../Models/BlogModels/BlogQueryModel'
@@ -9,27 +10,8 @@ import { URIParamsBlogIdModel } from '../Models/BlogModels/URIParamsBlogIdModel'
 import { blogsRepository } from '../Models/Repositories/blogs-repository'
 import { RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery } from '../types'
 
-const checkUrlWithRegExp = new RegExp('https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$')
 
 export const blogsRouter = Router({})
-
-const validateName = body('name')
-  .isString()
-  .trim()
-  .isLength({
-    min: 1,
-    max: 15,
-  })
-const validateDescription = body('description')
-  .isString()
-  .trim()
-  .isLength({
-    min: 1,
-    max: 500,
-  })
-
-const validateWebsiteUrl = body('websiteUrl').isString().trim().matches(checkUrlWithRegExp)
-
 
 blogsRouter.get('/', (req: RequestWithQuery<BlogQueryModel>, res: Response<BlogViewModel[]>) => {
   const blogs = blogsRepository.getAllBlogs()
@@ -46,6 +28,7 @@ blogsRouter.get('/:id', (req: RequestWithParams<URIParamsBlogIdModel>, res: Resp
 
 blogsRouter.post(
   '/',
+  authMiddleware,
   validateName,
   validateDescription,
   validateWebsiteUrl,
@@ -61,6 +44,7 @@ blogsRouter.post(
 
 blogsRouter.put(
   '/:id',
+  authMiddleware,
   validateName,
   validateDescription,
   validateWebsiteUrl,
@@ -79,7 +63,7 @@ blogsRouter.put(
   },
 )
 
-blogsRouter.delete('/:id', (req: RequestWithParams<URIParamsBlogIdModel>, res: Response) => {
+blogsRouter.delete('/:id', authMiddleware, (req: RequestWithParams<URIParamsBlogIdModel>, res: Response) => {
   const deletedVideo = blogsRepository.deleteBlogById(req.params.id)
   if (!deletedVideo) {
     res.sendStatus(STATUS_CODES.NOT_FOUND)

@@ -1,7 +1,13 @@
 import { Response, Router } from 'express'
-import { body } from 'express-validator'
 import { STATUS_CODES } from '../helpers/StatusCodes'
+import { authMiddleware } from '../middlewares/auth-middleware'
 import { inputValidationMiddleware } from '../middlewares/input-validation-middleware'
+import {
+  validateBlogId,
+  validateContent,
+  validateShortDescription,
+  validateTitle,
+} from '../middlewares/posts-body-validators'
 import { URIParamsBlogIdModel } from '../Models/BlogModels/URIParamsBlogIdModel'
 import { PostInputModel } from '../Models/PostModels/PostInputModel'
 import { PostQueryModel } from '../Models/PostModels/PostQueryModel'
@@ -11,33 +17,6 @@ import { postsRepository } from '../Models/Repositories/posts-repository'
 import { RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery } from '../types'
 
 export const postsRouter = Router({})
-
-const validateTitle = body('title')
-  .isString()
-  .trim()
-  .isLength({
-    min: 1,
-    max: 30,
-  })
-
-const validateShortDescription = body('shortDescription')
-  .isString()
-  .trim()
-  .isLength({
-    min: 1,
-    max: 100,
-  })
-
-const validateContent = body('content')
-  .isString()
-  .trim()
-  .isLength({
-    min: 1,
-    max: 1000,
-  })
-
-const validateBlogId = body('blogId').isString().trim().isLength({ min: 1 })
-
 
 postsRouter.get('/', (req: RequestWithQuery<PostQueryModel>, res: Response<PostViewModel[]>) => {
   const posts = postsRepository.getAllPosts()
@@ -55,6 +34,7 @@ postsRouter.get('/:id', (req: RequestWithParams<URIParamsBlogIdModel>, res: Resp
 
 postsRouter.post(
   '/',
+  authMiddleware,
   validateTitle,
   validateShortDescription,
   validateContent,
@@ -72,6 +52,7 @@ postsRouter.post(
 
 postsRouter.put(
   '/:id',
+  authMiddleware,
   validateTitle,
   validateShortDescription,
   validateContent,
@@ -92,7 +73,7 @@ postsRouter.put(
   },
 )
 
-postsRouter.delete('/:id', (req: RequestWithParams<URIParamsBlogIdModel>, res: Response) => {
+postsRouter.delete('/:id', authMiddleware, (req: RequestWithParams<URIParamsBlogIdModel>, res: Response) => {
   const deletedPost = postsRepository.deletePostById(req.params.id)
   if (!deletedPost) {
     res.sendStatus(STATUS_CODES.NOT_FOUND)
