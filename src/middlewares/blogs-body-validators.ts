@@ -14,4 +14,10 @@ export const validateDescription = body('description')
     max: 500,
   })
 
-export const validateWebsiteUrl = body('websiteUrl').isString().trim().matches(checkUrlWithRegExp)
+export const validateWebsiteUrl = body('websiteUrl')
+  .isString()
+  .trim()
+  .isLength({
+    min: 1,
+    max: 100,
+  }).matches(checkUrlWithRegExp)
