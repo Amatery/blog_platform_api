@@ -15,7 +15,6 @@ export const validateDescription = body('description')
   })
 
 export const validateWebsiteUrl = body('websiteUrl')
-  .isString()
   .trim()
   .isLength({
     min: 1,
