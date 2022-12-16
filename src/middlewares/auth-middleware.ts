@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
+import { STATUS_CODES } from '../helpers/StatusCodes'
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const auth = {
@@ -15,7 +16,13 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     return next()
   }
 
+  if (login && password && login !== auth.login && password !== auth.password) {
+    // Incorrect data
+    res.set('WWW-Authenticate', 'Basic realm="401"')
+    res.status(STATUS_CODES.UNAUTHORIZED).send('Login or password is incorrect')
+  }
+
   // Access denied...
   res.set('WWW-Authenticate', 'Basic realm="401"')
-  res.status(401).send('Authentication required.')
+  res.status(STATUS_CODES.UNAUTHORIZED).send('Authentication required.')
 }
