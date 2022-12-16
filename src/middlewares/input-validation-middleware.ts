@@ -12,8 +12,8 @@ export const inputValidationMiddleware = (
     res.status(STATUS_CODES.BAD_REQUEST).json({
       errorsMessages: errors.array().map(e => {
         return {
-          field: e.param,
           message: e.msg,
+          field: e.param,
         }
       }),
     })
