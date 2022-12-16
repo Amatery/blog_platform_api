@@ -58,4 +58,16 @@ export const blogsRepository = {
     blogs = blogs.filter(b => b.id !== id)
     return true
   },
+
+  /**
+   * ONLY FOR E2E TESTS
+   */
+  deleteAllBlogs(): BlogViewModel[] {
+    blogs = []
+    return blogs
+  },
+  /**
+   *
+   */
+
 }

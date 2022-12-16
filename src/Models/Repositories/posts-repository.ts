@@ -69,4 +69,16 @@ export const postsRepository = {
     posts = posts.filter(p => p.id !== id)
     return true
   },
+
+  /**
+   * ONLY FOR E2E TESTS
+   */
+  deleteAllPosts(): PostViewModel[] {
+    posts = []
+    return posts
+  },
+  /**
+   *
+   */
+
 }
