@@ -10,6 +10,7 @@ export const validateTitle = body('title')
   })
 
 export const validateShortDescription = body('shortDescription')
+  .isString()
   .trim()
   .isLength({
     min: 1,
@@ -17,13 +18,14 @@ export const validateShortDescription = body('shortDescription')
   })
 
 export const validateContent = body('content')
+  .isString()
   .trim()
   .isLength({
     min: 1,
     max: 1000,
   })
 
-export const validateBlogId = body('blogId').trim().isLength({ min: 1 }).custom(v => {
+export const validateBlogId = body('blogId').isString().trim().isLength({ min: 1 }).custom(v => {
   const foundBlog = blogs.find(b => b.id === v)
   if (!foundBlog) {
     return Promise.reject('BlogId does not exists')
