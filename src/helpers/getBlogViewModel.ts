@@ -1,10 +1,12 @@
+import { WithId } from 'mongodb'
 import { BlogViewModel } from '../Models/BlogModels/BlogViewModel'
 
-export const getBlogViewModel = (blog: BlogViewModel): BlogViewModel => {
+export const getBlogViewModel = (blog: WithId<BlogViewModel> | BlogViewModel): BlogViewModel => {
   return {
     id: blog.id,
     name: blog.name,
     description: blog.description,
     websiteUrl: blog.websiteUrl,
+    createdAt: blog.createdAt,
   }
 }

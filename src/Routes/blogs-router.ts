@@ -7,20 +7,20 @@ import { BlogInputModel } from '../Models/BlogModels/BlogInputModel'
 import { BlogQueryModel } from '../Models/BlogModels/BlogQueryModel'
 import { BlogViewModel } from '../Models/BlogModels/BlogViewModel'
 import { URIParamsBlogIdModel } from '../Models/BlogModels/URIParamsBlogIdModel'
-import { blogsRepository } from '../Models/Repositories/blogs-repository'
+import { blogsRepository } from '../Repositories/blogs-repository'
 import { RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery } from '../types'
 
 
 export const blogsRouter = Router({})
 
-blogsRouter.get('/', (req: RequestWithQuery<BlogQueryModel>, res: Response<BlogViewModel[]>) => {
-  const blogs = blogsRepository.getAllBlogs()
+blogsRouter.get('/', async (req: RequestWithQuery<BlogQueryModel>, res: Response<BlogViewModel[]>) => {
+  const blogs = await blogsRepository.getAllBlogs()
   res.status(STATUS_CODES.OK).json(blogs)
 })
 
-blogsRouter.get('/:id', (req: RequestWithParams<URIParamsBlogIdModel>, res: Response<BlogViewModel>) => {
-  const foundBlog = blogsRepository.getBlogById(req.params.id)
-  if (!foundBlog) {
+blogsRouter.get('/:id', async (req: RequestWithParams<URIParamsBlogIdModel>, res: Response<BlogViewModel | null>) => {
+  const foundBlog = await blogsRepository.getBlogById(req.params.id)
+  if (foundBlog === null) {
     res.sendStatus(STATUS_CODES.NOT_FOUND)
   }
   res.status(STATUS_CODES.OK).json(foundBlog)
@@ -33,11 +33,13 @@ blogsRouter.post(
   validateDescription,
   validateWebsiteUrl,
   inputValidationMiddleware,
-  (req: RequestWithBody<BlogInputModel>, res: Response<BlogViewModel>) => {
-    const name = req.body.name
-    const description = req.body.description
-    const websiteUrl = req.body.websiteUrl
-    const createdVideo = blogsRepository.createBlog(name, description, websiteUrl)
+  async (req: RequestWithBody<BlogInputModel>, res: Response<BlogViewModel>) => {
+    const {
+      name,
+      description,
+      websiteUrl,
+    } = req.body
+    const createdVideo = await blogsRepository.createBlog(name, description, websiteUrl)
     res.status(STATUS_CODES.CREATED).json(createdVideo)
   },
 )
@@ -49,12 +51,14 @@ blogsRouter.put(
   validateDescription,
   validateWebsiteUrl,
   inputValidationMiddleware,
-  (req: RequestWithParamsAndBody<URIParamsBlogIdModel, BlogInputModel>, res: Response) => {
-    const id = req.params.id
-    const name = req.body.name
-    const description = req.body.description
-    const websiteUrl = req.body.websiteUrl
-    const updatedVideo = blogsRepository.updateBlogById(id, name, description, websiteUrl)
+  async (req: RequestWithParamsAndBody<URIParamsBlogIdModel, BlogInputModel>, res: Response) => {
+    const { id } = req.params
+    const {
+      name,
+      description,
+      websiteUrl,
+    } = req.body
+    const updatedVideo = await blogsRepository.updateBlogById(id, name, description, websiteUrl)
     if (!updatedVideo) {
       res.sendStatus(STATUS_CODES.NOT_FOUND)
       return
@@ -63,8 +67,8 @@ blogsRouter.put(
   },
 )
 
-blogsRouter.delete('/:id', authMiddleware, (req: RequestWithParams<URIParamsBlogIdModel>, res: Response) => {
-  const deletedVideo = blogsRepository.deleteBlogById(req.params.id)
+blogsRouter.delete('/:id', authMiddleware, async (req: RequestWithParams<URIParamsBlogIdModel>, res: Response) => {
+  const deletedVideo = await blogsRepository.deleteBlogById(req.params.id)
   if (!deletedVideo) {
     res.sendStatus(STATUS_CODES.NOT_FOUND)
     return

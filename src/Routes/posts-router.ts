@@ -13,19 +13,19 @@ import { PostInputModel } from '../Models/PostModels/PostInputModel'
 import { PostQueryModel } from '../Models/PostModels/PostQueryModel'
 import { PostViewModel } from '../Models/PostModels/PostViewModel'
 import { URIParamsPostIdModel } from '../Models/PostModels/URIParamsPostIdModel'
-import { postsRepository } from '../Models/Repositories/posts-repository'
+import { postsRepository } from '../Repositories/posts-repository'
 import { RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery } from '../types'
 
 export const postsRouter = Router({})
 
-postsRouter.get('/', (req: RequestWithQuery<PostQueryModel>, res: Response<PostViewModel[]>) => {
-  const posts = postsRepository.getAllPosts()
+postsRouter.get('/', async (req: RequestWithQuery<PostQueryModel>, res: Response<PostViewModel[]>) => {
+  const posts = await postsRepository.getAllPosts()
   res.status(STATUS_CODES.OK).json(posts)
 })
 
-postsRouter.get('/:id', (req: RequestWithParams<URIParamsBlogIdModel>, res: Response<PostViewModel>) => {
-  const foundPost = postsRepository.getPostById(req.params.id)
-  if (!foundPost) {
+postsRouter.get('/:id', async (req: RequestWithParams<URIParamsBlogIdModel>, res: Response<PostViewModel>) => {
+  const foundPost = await postsRepository.getPostById(req.params.id)
+  if (foundPost === null) {
     res.sendStatus(STATUS_CODES.NOT_FOUND)
     return
   }
@@ -40,12 +40,14 @@ postsRouter.post(
   validateContent,
   validateBlogId,
   inputValidationMiddleware,
-  (req: RequestWithBody<PostInputModel>, res: Response<PostViewModel>) => {
-    const title = req.body.title
-    const shortDescription = req.body.shortDescription
-    const content = req.body.content
-    const blogId = req.body.blogId
-    const createdPost = postsRepository.createPost(title, shortDescription, content, blogId)
+  async (req: RequestWithBody<PostInputModel>, res: Response<PostViewModel>) => {
+    const {
+      title,
+      shortDescription,
+      content,
+      blogId,
+    } = req.body
+    const createdPost = await postsRepository.createPost(title, shortDescription, content, blogId)
     res.status(STATUS_CODES.CREATED).json(createdPost)
   },
 )
@@ -58,13 +60,15 @@ postsRouter.put(
   validateContent,
   validateBlogId,
   inputValidationMiddleware,
-  (req: RequestWithParamsAndBody<URIParamsPostIdModel, PostInputModel>, res: Response) => {
-    const id = req.params.id
-    const title = req.body.title
-    const shortDescription = req.body.shortDescription
-    const content = req.body.content
-    const blogId = req.body.blogId
-    const updatedPost = postsRepository.updatePostById(id, title, shortDescription, content, blogId)
+  async (req: RequestWithParamsAndBody<URIParamsPostIdModel, PostInputModel>, res: Response) => {
+    const { id } = req.params
+    const {
+      title,
+      shortDescription,
+      content,
+      blogId,
+    } = req.body
+    const updatedPost = await postsRepository.updatePostById(id, title, shortDescription, content, blogId)
     if (!updatedPost) {
       res.sendStatus(STATUS_CODES.NOT_FOUND)
       return
@@ -73,8 +77,8 @@ postsRouter.put(
   },
 )
 
-postsRouter.delete('/:id', authMiddleware, (req: RequestWithParams<URIParamsBlogIdModel>, res: Response) => {
-  const deletedPost = postsRepository.deletePostById(req.params.id)
+postsRouter.delete('/:id', authMiddleware, async (req: RequestWithParams<URIParamsBlogIdModel>, res: Response) => {
+  const deletedPost = await postsRepository.deletePostById(req.params.id)
   if (!deletedPost) {
     res.sendStatus(STATUS_CODES.NOT_FOUND)
     return
