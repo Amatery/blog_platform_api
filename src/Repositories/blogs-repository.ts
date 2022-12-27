@@ -12,10 +12,10 @@ export const blogsRepository = {
   },
   async getBlogById(id: string): Promise<BlogViewModel | null> {
     const foundBlog = await blogsCollection.findOne({ id })
-    if (foundBlog !== null) {
-      return getBlogViewModel(foundBlog)
-    } else {
+    if (foundBlog === null) {
       return null
+    } else {
+      return getBlogViewModel(foundBlog)
     }
   },
   async createBlog(name: string, description: string, websiteUrl: string): Promise<BlogViewModel> {

@@ -18,10 +18,11 @@ blogsRouter.get('/', async (req: RequestWithQuery<BlogQueryModel>, res: Response
   res.status(STATUS_CODES.OK).json(blogs)
 })
 
-blogsRouter.get('/:id', async (req: RequestWithParams<URIParamsBlogIdModel>, res: Response<BlogViewModel | null>) => {
+blogsRouter.get('/:id', async (req: RequestWithParams<URIParamsBlogIdModel>, res: Response<BlogViewModel>) => {
   const foundBlog = await blogsRepository.getBlogById(req.params.id)
   if (foundBlog === null) {
     res.sendStatus(STATUS_CODES.NOT_FOUND)
+    return
   }
   res.status(STATUS_CODES.OK).json(foundBlog)
 })
