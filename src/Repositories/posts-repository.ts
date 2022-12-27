@@ -42,10 +42,12 @@ export const postsRepository = {
     const updatedPost = await postsCollection.updateOne(
       { id },
       {
-        title,
-        shortDescription,
-        content,
-        blogId,
+        $set: {
+          title,
+          shortDescription,
+          content,
+          blogId,
+        },
       },
     )
     return updatedPost.matchedCount === 1
