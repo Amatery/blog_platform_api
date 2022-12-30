@@ -6,7 +6,7 @@ import { PostViewModel } from '../Models/PostModels/PostViewModel'
 
 
 export const postsRepository = {
-  async getAllPosts(): Promise<PostViewModel[]> {
+  async getPosts(): Promise<PostViewModel[]> {
     const posts = await postsCollection.find({}).toArray()
     return posts.map(p => getPostViewModel(p))
   },
@@ -18,7 +18,12 @@ export const postsRepository = {
       return getPostViewModel(foundPost)
     }
   },
-  async createPost(title: string, shortDescription: string, content: string, blogId: string): Promise<PostViewModel> {
+  async createPost(
+    title: string,
+    shortDescription: string,
+    content: string,
+    blogId: string,
+  ): Promise<PostViewModel> {
     const foundBlog = await blogsCollection.findOne({ id: blogId })
     const createdPost: PostViewModel = {
       id: uuidv4(),

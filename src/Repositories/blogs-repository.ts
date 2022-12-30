@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid'
 import { DeleteResult } from 'mongodb'
 import { blogsCollection } from '../database/database-config'
 import { getBlogViewModel } from '../helpers/getBlogViewModel'
@@ -6,7 +5,7 @@ import { BlogViewModel } from '../Models/BlogModels/BlogViewModel'
 
 
 export const blogsRepository = {
-  async getAllBlogs(): Promise<BlogViewModel[]> {
+  async getBlogs(): Promise<BlogViewModel[]> {
     const blogs = await blogsCollection.find({}).toArray()
     return blogs.map(b => getBlogViewModel(b))
   },
@@ -18,16 +17,9 @@ export const blogsRepository = {
       return getBlogViewModel(foundBlog)
     }
   },
-  async createBlog(name: string, description: string, websiteUrl: string): Promise<BlogViewModel> {
-    const createdVideo: BlogViewModel = {
-      id: uuidv4(),
-      name,
-      description,
-      websiteUrl,
-      createdAt: new Date().toISOString(),
-    }
-    await blogsCollection.insertOne(createdVideo)
-    return getBlogViewModel(createdVideo)
+  async createBlog(newBlog: BlogViewModel): Promise<BlogViewModel> {
+    await blogsCollection.insertOne(newBlog)
+    return getBlogViewModel(newBlog)
   },
   async updateBlogById(id: string, name: string, description: string, websiteUrl: string): Promise<boolean> {
     const foundBlog = await blogsCollection.updateOne(

@@ -1,4 +1,5 @@
 import { Response, Router } from 'express'
+import { blogsService } from '../domain/blogs-service'
 import { STATUS_CODES } from '../helpers/StatusCodes'
 import { authMiddleware } from '../middlewares/auth-middleware'
 import { validateDescription, validateName, validateWebsiteUrl } from '../middlewares/blogs-body-validators'
@@ -7,19 +8,18 @@ import { BlogInputModel } from '../Models/BlogModels/BlogInputModel'
 import { BlogQueryModel } from '../Models/BlogModels/BlogQueryModel'
 import { BlogViewModel } from '../Models/BlogModels/BlogViewModel'
 import { URIParamsBlogIdModel } from '../Models/BlogModels/URIParamsBlogIdModel'
-import { blogsRepository } from '../Repositories/blogs-repository'
 import { RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery } from '../types'
 
 
 export const blogsRouter = Router({})
 
 blogsRouter.get('/', async (req: RequestWithQuery<BlogQueryModel>, res: Response<BlogViewModel[]>) => {
-  const blogs = await blogsRepository.getAllBlogs()
+  const blogs = await blogsService.getBlogs()
   res.status(STATUS_CODES.OK).json(blogs)
 })
 
 blogsRouter.get('/:id', async (req: RequestWithParams<URIParamsBlogIdModel>, res: Response<BlogViewModel>) => {
-  const foundBlog = await blogsRepository.getBlogById(req.params.id)
+  const foundBlog = await blogsService.getBlogById(req.params.id)
   if (foundBlog === null) {
     res.sendStatus(STATUS_CODES.NOT_FOUND)
     return
@@ -40,7 +40,7 @@ blogsRouter.post(
       description,
       websiteUrl,
     } = req.body
-    const createdVideo = await blogsRepository.createBlog(name, description, websiteUrl)
+    const createdVideo = await blogsService.createBlog(name, description, websiteUrl)
     res.status(STATUS_CODES.CREATED).json(createdVideo)
   },
 )
@@ -59,7 +59,7 @@ blogsRouter.put(
       description,
       websiteUrl,
     } = req.body
-    const updatedVideo = await blogsRepository.updateBlogById(id, name, description, websiteUrl)
+    const updatedVideo = await blogsService.updateBlogById(id, name, description, websiteUrl)
     if (!updatedVideo) {
       res.sendStatus(STATUS_CODES.NOT_FOUND)
       return
@@ -69,7 +69,7 @@ blogsRouter.put(
 )
 
 blogsRouter.delete('/:id', authMiddleware, async (req: RequestWithParams<URIParamsBlogIdModel>, res: Response) => {
-  const deletedVideo = await blogsRepository.deleteBlogById(req.params.id)
+  const deletedVideo = await blogsService.deleteBlogById(req.params.id)
   if (!deletedVideo) {
     res.sendStatus(STATUS_CODES.NOT_FOUND)
     return
