@@ -1,14 +1,28 @@
 import { DeleteResult } from 'mongodb'
 import { v4 as uuidv4 } from 'uuid'
 import { blogsCollection, postsCollection } from '../database/database-config'
+import { getPostPaginationModel } from '../helpers/getPostPaginationModel'
 import { getPostViewModel } from '../helpers/getPostViewModel'
+import { PaginationPostModel } from '../Models/BlogModels/PaginationPostModel'
 import { PostViewModel } from '../Models/PostModels/PostViewModel'
 
 
 export const postsRepository = {
-  async getPosts(): Promise<PostViewModel[]> {
-    const posts = await postsCollection.find({}).toArray()
-    return posts.map(p => getPostViewModel(p))
+  async getPosts(
+    sortBy: string,
+    sortDirection: string,
+    pageNumber: number,
+    pageSize: number,
+  ): Promise<PaginationPostModel> {
+    const totalCount = await postsCollection.countDocuments()
+    const getPageCount = Math.ceil(totalCount / pageSize)
+    const posts = await postsCollection
+      .find({})
+      .sort({ [sortBy]: sortDirection === 'desc' ? -1 : 1 })
+      .skip(pageSize * (pageNumber - 1))
+      .limit(pageSize)
+      .toArray()
+    return getPostPaginationModel(pageSize, pageNumber, getPageCount, totalCount, posts)
   },
   async getPostById(id: string): Promise<PostViewModel | null> {
     const foundPost = await postsCollection.findOne({ id })

@@ -9,7 +9,7 @@ import {
   validateShortDescription,
   validateTitle,
 } from '../middlewares/posts-body-validators'
-import { URIParamsBlogIdModel } from '../Models/BlogModels/URIParamsBlogIdModel'
+import { PaginationPostModel } from '../Models/BlogModels/PaginationPostModel'
 import { PostInputModel } from '../Models/PostModels/PostInputModel'
 import { PostQueryModel } from '../Models/PostModels/PostQueryModel'
 import { PostViewModel } from '../Models/PostModels/PostViewModel'
@@ -18,12 +18,18 @@ import { RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWi
 
 export const postsRouter = Router({})
 
-postsRouter.get('/', async (req: RequestWithQuery<PostQueryModel>, res: Response<PostViewModel[]>) => {
-  const posts = await postsService.getPosts()
+postsRouter.get('/', async (req: RequestWithQuery<PostQueryModel>, res: Response<PaginationPostModel>) => {
+  const {
+    sortBy = 'createdAt',
+    sortDirection = 'desc',
+    pageNumber = 1,
+    pageSize = 10,
+  } = req.query
+  const posts = await postsService.getPosts(sortBy, sortDirection, +pageNumber, +pageSize)
   res.status(STATUS_CODES.OK).json(posts)
 })
 
-postsRouter.get('/:id', async (req: RequestWithParams<URIParamsBlogIdModel>, res: Response<PostViewModel>) => {
+postsRouter.get('/:id', async (req: RequestWithParams<URIParamsPostIdModel>, res: Response<PostViewModel>) => {
   const foundPost = await postsService.getPostById(req.params.id)
   if (foundPost === null) {
     res.sendStatus(STATUS_CODES.NOT_FOUND)
@@ -77,7 +83,7 @@ postsRouter.put(
   },
 )
 
-postsRouter.delete('/:id', authMiddleware, async (req: RequestWithParams<URIParamsBlogIdModel>, res: Response) => {
+postsRouter.delete('/:id', authMiddleware, async (req: RequestWithParams<URIParamsPostIdModel>, res: Response) => {
   const deletedPost = await postsService.deletePostById(req.params.id)
   if (!deletedPost) {
     res.sendStatus(STATUS_CODES.NOT_FOUND)

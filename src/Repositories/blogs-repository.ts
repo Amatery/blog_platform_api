@@ -1,23 +1,43 @@
 import { DeleteResult } from 'mongodb'
-import { blogsCollection } from '../database/database-config'
+import { v4 as uuidv4 } from 'uuid'
+import { blogsCollection, postsCollection } from '../database/database-config'
+import { getBlogPaginationModel } from '../helpers/getBlogPaginationModel'
 import { getBlogViewModel } from '../helpers/getBlogViewModel'
+import { getPostPaginationModel } from '../helpers/getPostPaginationModel'
+import { getPostViewModel } from '../helpers/getPostViewModel'
 import { BlogViewModel } from '../Models/BlogModels/BlogViewModel'
-
+import { PaginationBlogModel } from '../Models/BlogModels/PaginationBlogModel'
+import { PaginationPostModel } from '../Models/BlogModels/PaginationPostModel'
+import { PostViewModel } from '../Models/PostModels/PostViewModel'
 
 export const blogsRepository = {
-  async getBlogs(): Promise<BlogViewModel[]> {
-    const blogs = await blogsCollection.find({}).toArray()
-    return blogs.map(b => getBlogViewModel(b))
+  async getBlogs(
+    searchNameTerm: string | null,
+    sortBy: string,
+    sortDirection: string,
+    pageNumber: number,
+    pageSize: number,
+  ): Promise<PaginationBlogModel> {
+    const blogs = await blogsCollection.find({
+        name: {
+          $regex: searchNameTerm ?? '',
+          $options: '-i',
+        },
+      })
+      .sort({ [sortBy]: sortDirection === 'desc' ? -1 : 1 })
+      .skip(pageSize * (pageNumber - 1))
+      .limit(pageSize)
+      .toArray()
+    const totalDocuments = await blogsCollection.countDocuments({})
+    const totalItems = searchNameTerm !== null ? blogs.length : totalDocuments
+    const getPagesCount = Math.ceil(totalItems / pageSize)
+    return getBlogPaginationModel(pageSize, pageNumber, getPagesCount, totalItems, blogs)
   },
   async getBlogById(id: string): Promise<BlogViewModel | null> {
-    const foundBlog = await blogsCollection.findOne({ id })
-    if (foundBlog === null) {
-      return null
-    } else {
-      return getBlogViewModel(foundBlog)
-    }
+    const foundBlog: BlogViewModel | null = await blogsCollection.findOne({ id })
+    return foundBlog === null ? null : getBlogViewModel(foundBlog)
   },
-  async createBlog(newBlog: BlogViewModel): Promise<BlogViewModel> {
+  async createBlog(newBlog: any): Promise<BlogViewModel> {
     await blogsCollection.insertOne(newBlog)
     return getBlogViewModel(newBlog)
   },
@@ -37,6 +57,49 @@ export const blogsRepository = {
   async deleteBlogById(id: string): Promise<boolean> {
     const foundBlog = await blogsCollection.deleteOne({ id })
     return foundBlog.deletedCount === 1
+  },
+  async findPostsByBlogId(
+    blogId: string,
+    searchNameTerm: string | null,
+    sortBy: string,
+    sortDirection: string,
+    pageNumber: number,
+    pageSize: number,
+  ): Promise<PaginationPostModel | null> {
+    const totalCount = await postsCollection.countDocuments({ blogId })
+    const getPagesCount = Math.ceil(totalCount / pageSize)
+    const foundPosts = await postsCollection.find({ blogId })
+      .sort({ [sortBy]: sortDirection === 'desc' ? -1 : 1 })
+      .skip(pageSize * (pageNumber - 1))
+      .limit(pageSize)
+      .toArray()
+    return !foundPosts.length ?
+      null :
+      getPostPaginationModel(pageSize, pageNumber, getPagesCount, totalCount, foundPosts)
+
+  },
+  async createPostByBlogId(
+    blogId: string,
+    title: string,
+    shortDescription: string,
+    content: string,
+  ): Promise<PostViewModel | null> {
+    const foundBlog = await blogsCollection.findOne({ id: blogId })
+    if (foundBlog) {
+      const createdPost: PostViewModel = {
+        id: uuidv4(),
+        title,
+        shortDescription,
+        content,
+        blogId,
+        blogName: foundBlog.name,
+        createdAt: new Date().toISOString(),
+      }
+      await postsCollection.insertOne(createdPost)
+      return getPostViewModel(createdPost)
+    } else {
+      return null
+    }
   },
 
   /**

@@ -1,10 +1,16 @@
 import { DeleteResult } from 'mongodb'
+import { PaginationPostModel } from '../Models/BlogModels/PaginationPostModel'
 import { PostViewModel } from '../Models/PostModels/PostViewModel'
 import { postsRepository } from '../Repositories/posts-repository'
 
 export const postsService = {
-  async getPosts(): Promise<PostViewModel[]> {
-    return postsRepository.getPosts()
+  async getPosts(
+    sortBy: string,
+    sortDirection: string,
+    pageNumber: number,
+    pageSize: number,
+  ): Promise<PaginationPostModel> {
+    return postsRepository.getPosts(sortBy, sortDirection, pageNumber, pageSize)
   },
   async getPostById(id: string): Promise<PostViewModel | null> {
     return postsRepository.getPostById(id)

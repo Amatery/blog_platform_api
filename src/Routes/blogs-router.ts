@@ -4,17 +4,41 @@ import { STATUS_CODES } from '../helpers/StatusCodes'
 import { authMiddleware } from '../middlewares/auth-middleware'
 import { validateDescription, validateName, validateWebsiteUrl } from '../middlewares/blogs-body-validators'
 import { inputValidationMiddleware } from '../middlewares/input-validation-middleware'
+import {
+  validateContent,
+  validateShortDescription,
+  validateTitle,
+} from '../middlewares/posts-body-validators'
 import { BlogInputModel } from '../Models/BlogModels/BlogInputModel'
 import { BlogQueryModel } from '../Models/BlogModels/BlogQueryModel'
 import { BlogViewModel } from '../Models/BlogModels/BlogViewModel'
+import { PaginationBlogModel } from '../Models/BlogModels/PaginationBlogModel'
+import { PaginationPostModel } from '../Models/BlogModels/PaginationPostModel'
 import { URIParamsBlogIdModel } from '../Models/BlogModels/URIParamsBlogIdModel'
-import { RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery } from '../types'
+import { PostInputModel } from '../Models/PostModels/PostInputModel'
+import { PostQueryModel } from '../Models/PostModels/PostQueryModel'
+import { PostViewModel } from '../Models/PostModels/PostViewModel'
+import { URIParamsPostIdModel } from '../Models/PostModels/URIParamsPostIdModel'
+import {
+  RequestWithBody,
+  RequestWithParams,
+  RequestWithParamsAndBody,
+  RequestWithQuery,
+  RequestWithQueryAndParams,
+} from '../types'
 
 
 export const blogsRouter = Router({})
 
-blogsRouter.get('/', async (req: RequestWithQuery<BlogQueryModel>, res: Response<BlogViewModel[]>) => {
-  const blogs = await blogsService.getBlogs()
+blogsRouter.get('/', async (req: RequestWithQuery<BlogQueryModel>, res: Response<PaginationBlogModel>) => {
+  const {
+    searchNameTerm = null,
+    sortBy = 'createdAt',
+    sortDirection = 'desc',
+    pageNumber = 1,
+    pageSize = 10,
+  } = req.query
+  const blogs = await blogsService.getBlogs(searchNameTerm, sortBy, sortDirection, +pageNumber, +pageSize)
   res.status(STATUS_CODES.OK).json(blogs)
 })
 
@@ -76,3 +100,57 @@ blogsRouter.delete('/:id', authMiddleware, async (req: RequestWithParams<URIPara
   }
   res.sendStatus(STATUS_CODES.NO_CONTENT)
 })
+
+blogsRouter.get(
+  '/:id/posts',
+  async (
+    req: RequestWithQueryAndParams<URIParamsPostIdModel, PostQueryModel>,
+    res: Response<PaginationPostModel>,
+  ) => {
+    const blogId = req.params.id
+    const {
+      searchNameTerm = null,
+      sortBy = 'createdAt',
+      sortDirection = 'desc',
+      pageNumber = 1,
+      pageSize = 10,
+    } = req.query
+
+    const foundBlogPosts = await blogsService.findPostsByBlogId(
+      blogId,
+      searchNameTerm,
+      sortBy,
+      sortDirection,
+      +pageNumber,
+      +pageSize,
+    )
+    if (foundBlogPosts === null) {
+      res.sendStatus(STATUS_CODES.NOT_FOUND)
+      return
+    }
+    res.status(STATUS_CODES.OK).json(foundBlogPosts)
+  },
+)
+
+blogsRouter.post(
+  '/:id/posts',
+  authMiddleware,
+  validateTitle,
+  validateShortDescription,
+  validateContent,
+  inputValidationMiddleware,
+  async (req: RequestWithParamsAndBody<URIParamsPostIdModel, PostInputModel>, res: Response<PostViewModel>) => {
+    const blogId = req.params.id
+    const {
+      title,
+      shortDescription,
+      content,
+    } = req.body
+    const createdPost = await blogsService.createPostByBlogId(blogId, title, shortDescription, content)
+    if (createdPost === null) {
+      res.sendStatus(STATUS_CODES.NOT_FOUND)
+      return
+    }
+    res.status(STATUS_CODES.CREATED).json(createdPost)
+  },
+)
