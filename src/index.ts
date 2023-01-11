@@ -42,7 +42,7 @@ app.delete('/testing/all-data', async (req: Request, res: Response) => {
 const startServer = async () => {
   await connectDB()
   app.listen(port, () => {
-    console.log(`✅ App listening on ${port}`)
+    console.log(`🚀🚀🚀🚀 App listening on ${port}`)
   })
 }
 

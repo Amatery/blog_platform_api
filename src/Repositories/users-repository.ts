@@ -49,7 +49,7 @@ export const usersRepository = {
     return foundUser.deletedCount === 1
   },
   async findUserByLoginOrEmail(credentials: string): Promise<UserDBViewModel | null> {
-    return usersCollection.findOne({ $or: [{ email: credentials }, { userName: credentials }] })
+    return usersCollection.findOne({ $or: [{ email: credentials }, { login: credentials }] })
   },
   /**
    * ONLY FOR E2E TESTS

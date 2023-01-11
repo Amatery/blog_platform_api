@@ -1,6 +1,5 @@
 import { body } from 'express-validator'
 
-const checkUrlWithRegExp = new RegExp('https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$')
 export const validateName = body('name')
   .isString()
   .trim()
@@ -22,4 +21,5 @@ export const validateWebsiteUrl = body('websiteUrl')
   .isLength({
     min: 1,
     max: 100,
-  }).matches(checkUrlWithRegExp)
+  })
+  .matches('https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$')
