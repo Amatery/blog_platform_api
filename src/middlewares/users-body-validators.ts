@@ -4,7 +4,7 @@ export const validateLogin = body('login')
   .isString()
   .trim()
   .isLength({
-    min: 1,
+    min: 3,
     max: 10,
   })
   .matches('^[a-zA-Z0-9_-]*$')
