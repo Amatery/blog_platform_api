@@ -2,7 +2,7 @@ import { DeleteResult } from 'mongodb'
 import { v4 as uuidv4 } from 'uuid'
 import { BlogViewModel } from '../Models/BlogModels/BlogViewModel'
 import { PaginationBlogModel } from '../Models/BlogModels/PaginationBlogModel'
-import { PaginationPostModel } from '../Models/BlogModels/PaginationPostModel'
+import { PaginationPostModel } from '../Models/PostModels/PaginationPostModel'
 import { PostViewModel } from '../Models/PostModels/PostViewModel'
 import { blogsRepository } from '../Repositories/blogs-repository'
 
@@ -57,8 +57,8 @@ export const blogsService = {
   /**
    * ONLY FOR E2E TESTS
    */
-  async deleteAllBlogs(): Promise<DeleteResult> {
-    return blogsRepository.deleteAllBlogs()
+  async _deleteAllBlogs(): Promise<DeleteResult> {
+    return blogsRepository._deleteAllBlogs()
   },
   /**
    *

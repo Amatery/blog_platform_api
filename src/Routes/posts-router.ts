@@ -1,7 +1,7 @@
 import { Response, Router } from 'express'
 import { postsService } from '../domain/posts-service'
 import { STATUS_CODES } from '../helpers/StatusCodes'
-import { authMiddleware } from '../middlewares/auth-middleware'
+import { basicAuthMiddleware } from '../middlewares/basic-auth-middleware'
 import { inputValidationMiddleware } from '../middlewares/input-validation-middleware'
 import {
   validateBlogId,
@@ -9,7 +9,7 @@ import {
   validateShortDescription,
   validateTitle,
 } from '../middlewares/posts-body-validators'
-import { PaginationPostModel } from '../Models/BlogModels/PaginationPostModel'
+import { PaginationPostModel } from '../Models/PostModels/PaginationPostModel'
 import { PostInputModel } from '../Models/PostModels/PostInputModel'
 import { PostQueryModel } from '../Models/PostModels/PostQueryModel'
 import { PostViewModel } from '../Models/PostModels/PostViewModel'
@@ -40,7 +40,7 @@ postsRouter.get('/:id', async (req: RequestWithParams<URIParamsPostIdModel>, res
 
 postsRouter.post(
   '/',
-  authMiddleware,
+  basicAuthMiddleware,
   validateTitle,
   validateShortDescription,
   validateContent,
@@ -60,7 +60,7 @@ postsRouter.post(
 
 postsRouter.put(
   '/:id',
-  authMiddleware,
+  basicAuthMiddleware,
   validateTitle,
   validateShortDescription,
   validateContent,
@@ -83,7 +83,7 @@ postsRouter.put(
   },
 )
 
-postsRouter.delete('/:id', authMiddleware, async (req: RequestWithParams<URIParamsPostIdModel>, res: Response) => {
+postsRouter.delete('/:id', basicAuthMiddleware, async (req: RequestWithParams<URIParamsPostIdModel>, res: Response) => {
   const deletedPost = await postsService.deletePostById(req.params.id)
   if (!deletedPost) {
     res.sendStatus(STATUS_CODES.NOT_FOUND)

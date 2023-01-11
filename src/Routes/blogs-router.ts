@@ -1,7 +1,7 @@
 import { Response, Router } from 'express'
 import { blogsService } from '../domain/blogs-service'
 import { STATUS_CODES } from '../helpers/StatusCodes'
-import { authMiddleware } from '../middlewares/auth-middleware'
+import { basicAuthMiddleware } from '../middlewares/basic-auth-middleware'
 import { validateDescription, validateName, validateWebsiteUrl } from '../middlewares/blogs-body-validators'
 import { inputValidationMiddleware } from '../middlewares/input-validation-middleware'
 import {
@@ -13,7 +13,7 @@ import { BlogInputModel } from '../Models/BlogModels/BlogInputModel'
 import { BlogQueryModel } from '../Models/BlogModels/BlogQueryModel'
 import { BlogViewModel } from '../Models/BlogModels/BlogViewModel'
 import { PaginationBlogModel } from '../Models/BlogModels/PaginationBlogModel'
-import { PaginationPostModel } from '../Models/BlogModels/PaginationPostModel'
+import { PaginationPostModel } from '../Models/PostModels/PaginationPostModel'
 import { URIParamsBlogIdModel } from '../Models/BlogModels/URIParamsBlogIdModel'
 import { PostInputModel } from '../Models/PostModels/PostInputModel'
 import { PostQueryModel } from '../Models/PostModels/PostQueryModel'
@@ -53,7 +53,7 @@ blogsRouter.get('/:id', async (req: RequestWithParams<URIParamsBlogIdModel>, res
 
 blogsRouter.post(
   '/',
-  authMiddleware,
+  basicAuthMiddleware,
   validateName,
   validateDescription,
   validateWebsiteUrl,
@@ -71,7 +71,7 @@ blogsRouter.post(
 
 blogsRouter.put(
   '/:id',
-  authMiddleware,
+  basicAuthMiddleware,
   validateName,
   validateDescription,
   validateWebsiteUrl,
@@ -92,7 +92,7 @@ blogsRouter.put(
   },
 )
 
-blogsRouter.delete('/:id', authMiddleware, async (req: RequestWithParams<URIParamsBlogIdModel>, res: Response) => {
+blogsRouter.delete('/:id', basicAuthMiddleware, async (req: RequestWithParams<URIParamsBlogIdModel>, res: Response) => {
   const deletedVideo = await blogsService.deleteBlogById(req.params.id)
   if (!deletedVideo) {
     res.sendStatus(STATUS_CODES.NOT_FOUND)
@@ -134,7 +134,7 @@ blogsRouter.get(
 
 blogsRouter.post(
   '/:id/posts',
-  authMiddleware,
+  basicAuthMiddleware,
   validateTitle,
   validateShortDescription,
   validateContent,

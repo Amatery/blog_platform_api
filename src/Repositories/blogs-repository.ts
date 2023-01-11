@@ -7,7 +7,7 @@ import { getPostPaginationModel } from '../helpers/getPostPaginationModel'
 import { getPostViewModel } from '../helpers/getPostViewModel'
 import { BlogViewModel } from '../Models/BlogModels/BlogViewModel'
 import { PaginationBlogModel } from '../Models/BlogModels/PaginationBlogModel'
-import { PaginationPostModel } from '../Models/BlogModels/PaginationPostModel'
+import { PaginationPostModel } from '../Models/PostModels/PaginationPostModel'
 import { PostViewModel } from '../Models/PostModels/PostViewModel'
 
 export const blogsRepository = {
@@ -30,8 +30,8 @@ export const blogsRepository = {
       .toArray()
     const totalDocuments = await blogsCollection.countDocuments({})
     const totalItems = searchNameTerm !== null ? blogs.length : totalDocuments
-    const getPagesCount = Math.ceil(totalItems / pageSize)
-    return getBlogPaginationModel(pageSize, pageNumber, getPagesCount, totalItems, blogs)
+    const pagesCount = Math.ceil(totalItems / pageSize)
+    return getBlogPaginationModel(pageSize, pageNumber, pagesCount, totalItems, blogs)
   },
   async getBlogById(id: string): Promise<BlogViewModel | null> {
     const foundBlog: BlogViewModel | null = await blogsCollection.findOne({ id })
@@ -67,7 +67,7 @@ export const blogsRepository = {
     pageSize: number,
   ): Promise<PaginationPostModel | null> {
     const totalCount = await postsCollection.countDocuments({ blogId })
-    const getPagesCount = Math.ceil(totalCount / pageSize)
+    const pagesCount = Math.ceil(totalCount / pageSize)
     const foundPosts = await postsCollection.find({ blogId })
       .sort({ [sortBy]: sortDirection === 'desc' ? -1 : 1 })
       .skip(pageSize * (pageNumber - 1))
@@ -75,7 +75,7 @@ export const blogsRepository = {
       .toArray()
     return !foundPosts.length ?
       null :
-      getPostPaginationModel(pageSize, pageNumber, getPagesCount, totalCount, foundPosts)
+      getPostPaginationModel(pageSize, pageNumber, pagesCount, totalCount, foundPosts)
 
   },
   async createPostByBlogId(
@@ -105,7 +105,7 @@ export const blogsRepository = {
   /**
    * ONLY FOR E2E TESTS
    */
-  async deleteAllBlogs(): Promise<DeleteResult> {
+  async _deleteAllBlogs(): Promise<DeleteResult> {
     return blogsCollection.deleteMany({})
   },
   /**

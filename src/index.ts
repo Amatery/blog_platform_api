@@ -1,11 +1,14 @@
 import express, { Request, Response } from 'express'
 import dotenv from 'dotenv'
 import { connectDB } from './database/database-config'
+import { blogsService } from './domain/blogs-service'
+import { postsService } from './domain/posts-service'
+import { usersService } from './domain/users-service'
 import { STATUS_CODES } from './helpers/StatusCodes'
-import { blogsRepository } from './Repositories/blogs-repository'
-import { postsRepository } from './Repositories/posts-repository'
+import { authorizationRouter } from './Routes/authorization-router'
 import { blogsRouter } from './Routes/blogs-router'
 import { postsRouter } from './Routes/posts-router'
+import { usersRouter } from './Routes/users-router'
 
 dotenv.config()
 const app = express()
@@ -19,14 +22,17 @@ app.get('/', (req, res) => {
 
 app.use('/blogs', blogsRouter)
 app.use('/posts', postsRouter)
+app.use('/users', usersRouter)
+app.use('/auth', authorizationRouter)
 
 
 /**
  * ONLY FOR E2E TESTS
  */
 app.delete('/testing/all-data', async (req: Request, res: Response) => {
-  await blogsRepository.deleteAllBlogs()
-  await postsRepository.deleteAllPosts()
+  await blogsService._deleteAllBlogs()
+  await postsService._deleteAllPosts()
+  await usersService._deleteAllUsers()
   res.sendStatus(STATUS_CODES.NO_CONTENT)
 })
 /**
@@ -41,4 +47,4 @@ const startServer = async () => {
 }
 
 
-startServer()
+startServer().then(r => r)

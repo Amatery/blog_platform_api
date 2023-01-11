@@ -1,5 +1,5 @@
 import { DeleteResult } from 'mongodb'
-import { PaginationPostModel } from '../Models/BlogModels/PaginationPostModel'
+import { PaginationPostModel } from '../Models/PostModels/PaginationPostModel'
 import { PostViewModel } from '../Models/PostModels/PostViewModel'
 import { postsRepository } from '../Repositories/posts-repository'
 
@@ -39,8 +39,8 @@ export const postsService = {
   /**
    * ONLY FOR E2E TESTS
    */
-  async deleteAllPosts(): Promise<DeleteResult> {
-    return postsRepository.deleteAllPosts()
+  async _deleteAllPosts(): Promise<DeleteResult> {
+    return postsRepository._deleteAllPosts()
   },
   /**
    *

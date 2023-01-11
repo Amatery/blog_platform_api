@@ -1,4 +1,4 @@
-import { PaginationPostModel } from '../Models/BlogModels/PaginationPostModel'
+import { PaginationPostModel } from '../Models/PostModels/PaginationPostModel'
 import { PostViewModel } from '../Models/PostModels/PostViewModel'
 
 export const getPostPaginationModel = (

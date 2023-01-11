@@ -1,16 +1,16 @@
-import { BlogViewModel } from './BlogViewModel'
+import { PostViewModel } from './PostViewModel'
 
-export type PaginationBlogModel = {
+export type PaginationPostModel = {
   /**
    * count of total pages
    * current page
    * items on the pages
    * total count
-   * View model of blogs
+   * View model of posts
    */
   pagesCount: number | null,
   page: number,
   pageSize: number,
   totalCount: number | null
-  items: BlogViewModel[]
+  items: PostViewModel[]
 }
