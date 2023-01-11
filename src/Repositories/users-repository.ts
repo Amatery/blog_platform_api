@@ -24,10 +24,14 @@ export const usersRepository = {
                   $regex: searchLoginTerm ?? '',
                   $options: 'si',
                 },
-                email: {
-                  $regex: searchEmailTerm ?? '',
-                  $options: 'si',
-                },
+                $or: [
+                  {
+                    email: {
+                      $regex: searchEmailTerm ?? '',
+                      $options: 'si',
+                    },
+                  },
+                ],
               },
             ],
           },
