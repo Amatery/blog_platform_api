@@ -16,16 +16,20 @@ export const usersRepository = {
     pageSize: number,
   ): Promise<PaginationUserModel> {
     const users = await usersCollection.find({
-        $or: [
+        $and: [
           {
-            login: {
-              $regex: searchLoginTerm ?? '',
-              $options: 'si',
-            },
-            email: {
-              $regex: searchEmailTerm ?? '',
-              $options: 'si',
-            },
+            $or: [
+              {
+                login: {
+                  $regex: searchLoginTerm ?? '',
+                  $options: 'si',
+                },
+                email: {
+                  $regex: searchEmailTerm ?? '',
+                  $options: 'si',
+                },
+              },
+            ],
           },
         ],
       })
