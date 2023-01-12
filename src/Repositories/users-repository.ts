@@ -18,11 +18,17 @@ export const usersRepository = {
     const users = await usersCollection.find({
         $or: [
           {
-            login: {
-              $regex: searchLoginTerm ?? '',
-              $options: 'si',
-            },
-            $or: [
+            $and: [
+              {
+                login: {
+                  $regex: searchLoginTerm ?? '',
+                  $options: 'i',
+                },
+              },
+            ],
+          },
+          {
+            $and: [
               {
                 email: {
                   $regex: searchEmailTerm ?? '',
