@@ -7,6 +7,7 @@ import { usersService } from './domain/users-service'
 import { STATUS_CODES } from './helpers/StatusCodes'
 import { authorizationRouter } from './Routes/authorization-router'
 import { blogsRouter } from './Routes/blogs-router'
+import { commentsRouter } from './Routes/comments-router'
 import { postsRouter } from './Routes/posts-router'
 import { usersRouter } from './Routes/users-router'
 
@@ -24,7 +25,7 @@ app.use('/blogs', blogsRouter)
 app.use('/posts', postsRouter)
 app.use('/users', usersRouter)
 app.use('/auth', authorizationRouter)
-
+app.use('/comments', commentsRouter)
 
 /**
  * ONLY FOR E2E TESTS
