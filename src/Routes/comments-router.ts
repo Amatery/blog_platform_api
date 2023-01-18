@@ -3,7 +3,9 @@ import { commentsService } from '../domain/comments-service'
 import { STATUS_CODES } from '../helpers/StatusCodes'
 import { authMiddleware } from '../middlewares/auth-middleware'
 import { validateCommentContent } from '../middlewares/comment-body-validators'
+import { validateCommentOwner } from '../middlewares/comment-owner-validators'
 import { inputValidationMiddleware } from '../middlewares/input-validation-middleware'
+import { ownerValidationMiddleware } from '../middlewares/owner-validation-middleware'
 import { CommentInputModel } from '../Models/CommentsModels/CommentInputModel'
 import { CommentViewModel } from '../Models/CommentsModels/CommentViewModel'
 import { URIParamsCommentIdModel } from '../Models/CommentsModels/URIParamsCommentIdModel'
@@ -28,13 +30,14 @@ commentsRouter.get(
 commentsRouter.put(
   '/:id',
   authMiddleware,
+  validateCommentOwner,
+  ownerValidationMiddleware,
   validateCommentContent,
   inputValidationMiddleware,
   async (req: RequestWithParamsAndBody<URIParamsCommentIdModel, CommentInputModel>, res: Response) => {
     const { id } = req.params
     const { content } = req.body
-    const { userId } = req.user!
-    const updatedComment = await commentsService.updateCommentById(id, content, userId)
+    const updatedComment = await commentsService.updateCommentById(id, content)
     if (!updatedComment) {
       res.sendStatus(STATUS_CODES.NOT_FOUND)
       return
@@ -46,10 +49,11 @@ commentsRouter.put(
 commentsRouter.delete(
   '/:id',
   authMiddleware,
+  validateCommentOwner,
+  ownerValidationMiddleware,
   async (req: RequestWithParams<URIParamsCommentIdModel>, res: Response) => {
     const { id } = req.params
-    const { userId } = req.user!
-    const deletedComment = await commentsService.deleteCommentById(id, userId)
+    const deletedComment = await commentsService.deleteCommentById(id)
     if (!deletedComment) {
       res.sendStatus(STATUS_CODES.NOT_FOUND)
       return

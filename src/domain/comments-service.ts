@@ -6,11 +6,11 @@ export const commentsService = {
   async getCommentById(id: string): Promise<CommentViewModel | null> {
     return commentsRepository.getCommentById(id)
   },
-  async updateCommentById(id: string, content: string, userId: string): Promise<boolean> {
-    return commentsRepository.updateCommentById(id, content, userId)
+  async updateCommentById(id: string, content: string): Promise<boolean> {
+    return commentsRepository.updateCommentById(id, content)
   },
-  async deleteCommentById(id: string, userId: string): Promise<boolean> {
-    return commentsRepository.deleteCommentById(id, userId)
+  async deleteCommentById(id: string): Promise<boolean> {
+    return commentsRepository.deleteCommentById(id)
   },
   /** ONLY FOR E2E TESTS **/
   async _deleteAllComments(): Promise<DeleteResult> {
