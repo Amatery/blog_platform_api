@@ -17,13 +17,13 @@ authorizationRouter.post(
   validateLoginOrEmail,
   validatePassword,
   inputValidationMiddleware,
-  async (req: RequestWithBody<LoginInputModel>, res: Response) => {
+  async (req: RequestWithBody<LoginInputModel>, res: Response<string>) => {
     const {
       loginOrEmail,
       password,
     } = req.body
     const user = await authorizationService.authorize(loginOrEmail, password)
-    if (user === null) {
+    if (!user) {
       res.sendStatus(STATUS_CODES.UNAUTHORIZED)
       return
     }
