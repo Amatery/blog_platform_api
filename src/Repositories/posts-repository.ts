@@ -9,6 +9,7 @@ import { CommentViewModel } from '../Models/CommentsModels/CommentViewModel'
 import { PaginationCommentModel } from '../Models/CommentsModels/PaginationCommentModel'
 import { PaginationPostModel } from '../Models/PostModels/PaginationPostModel'
 import { PostViewModel } from '../Models/PostModels/PostViewModel'
+import { UserAuthMeViewModel } from '../Models/UserModels/UserAuthMeViewModel'
 
 
 export const postsRepository = {
@@ -87,20 +88,42 @@ export const postsRepository = {
     sortDirection: string,
     pageNumber: number,
     pageSize: number,
-  ): Promise<PaginationCommentModel> {
-    const totalCount = await commentsCollection.countDocuments()
-    const pagesCount = Math.ceil(totalCount / pageSize)
-    const comments = await commentsCollection
-      .find({ postId: id })
-      .sort({ [sortBy]: sortDirection === 'desc' ? -1 : 1 })
-      .skip(pageSize * (pageNumber - 1))
-      .limit(pageSize)
-      .toArray()
-    return getCommentPaginationModel(pageSize, pageNumber, pagesCount, totalCount, comments)
+  ): Promise<PaginationCommentModel | null> {
+    const foundPost = await postsCollection.findOne({ id })
+    if (foundPost) {
+      const totalCount = await commentsCollection.countDocuments()
+      const pagesCount = Math.ceil(totalCount / pageSize)
+      const comments = await commentsCollection
+        .find({ postId: id })
+        .sort({ [sortBy]: sortDirection === 'desc' ? -1 : 1 })
+        .skip(pageSize * (pageNumber - 1))
+        .limit(pageSize)
+        .toArray()
+      return getCommentPaginationModel(pageSize, pageNumber, pagesCount, totalCount, comments)
+    } else {
+      return null
+    }
   },
-  async createCommentByPostId(newComment: CommentViewModel): Promise<CommentViewModel> {
-    await commentsCollection.insertOne(newComment)
-    return getCommentViewModel(newComment)
+  async createCommentByPostId(
+    id: string,
+    content: string,
+    user: UserAuthMeViewModel,
+  ): Promise<CommentViewModel | null> {
+    const foundPost = await postsCollection.findOne({ id })
+    if (foundPost) {
+      const newComment = {
+        id: uuidv4(),
+        postId: foundPost.id,
+        content,
+        userId: user.userId,
+        userLogin: user.login,
+        createdAt: new Date().toISOString(),
+      }
+      await commentsCollection.insertOne(newComment)
+      return getCommentViewModel(newComment)
+    } else {
+      return null
+    }
   },
   /**             **/
 

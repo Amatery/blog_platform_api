@@ -1,5 +1,4 @@
 import { DeleteResult } from 'mongodb'
-import { v4 as uuidv4 } from 'uuid'
 import { CommentViewModel } from '../Models/CommentsModels/CommentViewModel'
 import { PaginationCommentModel } from '../Models/CommentsModels/PaginationCommentModel'
 import { PaginationPostModel } from '../Models/PostModels/PaginationPostModel'
@@ -48,19 +47,15 @@ export const postsService = {
     sortDirection: string,
     pageNumber: number,
     pageSize: number,
-  ): Promise<PaginationCommentModel> {
+  ): Promise<PaginationCommentModel | null> {
     return postsRepository.getCommentsByPostId(id, sortBy, sortDirection, pageNumber, pageSize)
   },
-  async createCommentByPostId(id: string, content: string, user: UserAuthMeViewModel): Promise<CommentViewModel> {
-    const newComment = {
-      id: uuidv4(),
-      postId: id,
-      content,
-      userId: user.userId,
-      userLogin: user.login,
-      createdAt: new Date().toISOString(),
-    }
-    return postsRepository.createCommentByPostId(newComment)
+  async createCommentByPostId(
+    id: string,
+    content: string,
+    user: UserAuthMeViewModel,
+  ): Promise<CommentViewModel | null> {
+    return postsRepository.createCommentByPostId(id, content, user)
   },
   /**             **/
 

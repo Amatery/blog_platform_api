@@ -34,7 +34,7 @@ export const blogsRepository = {
     return getBlogPaginationModel(pageSize, pageNumber, pagesCount, totalItems, blogs)
   },
   async getBlogById(id: string): Promise<BlogViewModel | null> {
-    const foundBlog: BlogViewModel | null = await blogsCollection.findOne({ id })
+    const foundBlog = await blogsCollection.findOne({ id })
     return foundBlog === null ? null : getBlogViewModel(foundBlog)
   },
   async createBlog(newBlog: any): Promise<BlogViewModel> {

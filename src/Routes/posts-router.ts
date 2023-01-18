@@ -119,7 +119,7 @@ postsRouter.get(
       pageSize = 10,
     } = req.query
     const foundComments = await postsService.getCommentsByPostId(id, sortBy, sortDirection, +pageNumber, +pageSize)
-    if (!foundComments) {
+    if (foundComments === null) {
       res.sendStatus(STATUS_CODES.NOT_FOUND)
       return
     }
@@ -137,6 +137,10 @@ postsRouter.post(
     const { id } = req.params
     const { content } = req.body
     const createdComment = await postsService.createCommentByPostId(id, content, user!)
+    if (createdComment === null) {
+      res.sendStatus(STATUS_CODES.NOT_FOUND)
+      return
+    }
     return res.status(STATUS_CODES.CREATED).json(createdComment)
   },
 )
