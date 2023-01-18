@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express'
 import { settings } from '../settings'
 import { connectDB } from './database/database-config'
 import { blogsService } from './domain/blogs-service'
+import { commentsService } from './domain/comments-service'
 import { postsService } from './domain/posts-service'
 import { usersService } from './domain/users-service'
 import { STATUS_CODES } from './helpers/StatusCodes'
@@ -31,6 +32,7 @@ app.delete('/testing/all-data', async (req: Request, res: Response) => {
   await blogsService._deleteAllBlogs()
   await postsService._deleteAllPosts()
   await usersService._deleteAllUsers()
+  await commentsService._deleteAllComments()
   res.sendStatus(STATUS_CODES.NO_CONTENT)
 })
 /**             **/

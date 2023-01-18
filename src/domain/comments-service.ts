@@ -1,3 +1,4 @@
+import { DeleteResult } from 'mongodb'
 import { CommentViewModel } from '../Models/CommentsModels/CommentViewModel'
 import { commentsRepository } from '../Repositories/comments-repository'
 
@@ -11,4 +12,9 @@ export const commentsService = {
   async deleteCommentById(id: string): Promise<boolean> {
     return commentsRepository.deleteCommentById(id)
   },
+  /** ONLY FOR E2E TESTS **/
+  async _deleteAllComments(): Promise<DeleteResult> {
+    return commentsRepository._deleteAllComments()
+  },
+  /**             **/
 }

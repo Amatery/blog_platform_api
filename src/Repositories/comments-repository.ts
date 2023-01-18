@@ -1,3 +1,4 @@
+import { DeleteResult } from 'mongodb'
 import { commentsCollection } from '../database/database-config'
 import { getCommentViewModel } from '../helpers/getCommentViewModel'
 import { CommentViewModel } from '../Models/CommentsModels/CommentViewModel'
@@ -15,4 +16,9 @@ export const commentsRepository = {
     const deletedComment = await commentsCollection.deleteOne({ id })
     return deletedComment.deletedCount === 1
   },
+  /** ONLY FOR E2E TESTS **/
+  async _deleteAllComments(): Promise<DeleteResult> {
+    return commentsCollection.deleteMany({})
+  },
+  /**             **/
 }
