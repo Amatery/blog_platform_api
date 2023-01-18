@@ -28,7 +28,7 @@ authorizationRouter.post(
       return
     }
     const token = await jwtService.createJWT(user)
-    res.status(STATUS_CODES.CREATED).send(token)
+    res.status(STATUS_CODES.OK).send(token)
   },
 )
 
