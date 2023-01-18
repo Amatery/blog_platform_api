@@ -33,7 +33,8 @@ commentsRouter.put(
   async (req: RequestWithParamsAndBody<URIParamsCommentIdModel, CommentInputModel>, res: Response) => {
     const { id } = req.params
     const { content } = req.body
-    const updatedComment = await commentsService.updateCommentById(id, content)
+    const { userId } = req.user!
+    const updatedComment = await commentsService.updateCommentById(id, content, userId)
     if (!updatedComment) {
       res.sendStatus(STATUS_CODES.NOT_FOUND)
       return
@@ -47,7 +48,8 @@ commentsRouter.delete(
   authMiddleware,
   async (req: RequestWithParams<URIParamsCommentIdModel>, res: Response) => {
     const { id } = req.params
-    const deletedComment = await commentsService.deleteCommentById(id)
+    const { userId } = req.user!
+    const deletedComment = await commentsService.deleteCommentById(id, userId)
     if (!deletedComment) {
       res.sendStatus(STATUS_CODES.NOT_FOUND)
       return
