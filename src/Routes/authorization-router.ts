@@ -6,6 +6,7 @@ import { authMiddleware } from '../middlewares/auth-middleware'
 import { inputValidationMiddleware } from '../middlewares/input-validation-middleware'
 import { validateLoginOrEmail, validatePassword } from '../middlewares/login-body-validators'
 import { LoginInputModel } from '../Models/AuthorizationModels/LoginInputModel'
+import { LoginSuccessViewModel } from '../Models/AuthorizationModels/LoginSuccessViewModel'
 import { UserAuthMeViewModel } from '../Models/UserModels/UserAuthMeViewModel'
 import { RequestWithBody } from '../types/types'
 
@@ -17,7 +18,7 @@ authorizationRouter.post(
   validateLoginOrEmail,
   validatePassword,
   inputValidationMiddleware,
-  async (req: RequestWithBody<LoginInputModel>, res: Response<string>) => {
+  async (req: RequestWithBody<LoginInputModel>, res: Response<LoginSuccessViewModel>) => {
     const {
       loginOrEmail,
       password,
@@ -27,8 +28,10 @@ authorizationRouter.post(
       res.sendStatus(STATUS_CODES.UNAUTHORIZED)
       return
     }
-    const token = await jwtService.createJWT(user)
-    res.status(STATUS_CODES.OK).send(token)
+    const token = {
+      accessToken: await jwtService.createJWT(user),
+    }
+    res.status(STATUS_CODES.OK).json(token)
   },
 )
 
