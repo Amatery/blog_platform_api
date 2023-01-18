@@ -54,14 +54,9 @@ export const blogsService = {
     return blogsRepository.findPostsByBlogId(blogId, searchNameTerm, sortBy, sortDirection, pageNumber, pageSize)
   },
 
-  /**
-   * ONLY FOR E2E TESTS
-   */
+  /** ONLY FOR E2E TESTS **/
   async _deleteAllBlogs(): Promise<DeleteResult> {
     return blogsRepository._deleteAllBlogs()
   },
-  /**
-   *
-   */
-
+  /**             **/
 }

@@ -7,7 +7,6 @@ export type UserQueryModel = {
    * pageNumber: pageNumber is number of portions that should be returned (Default value : 1)
    * pageSize: pageSize is portions size that should be returned (Default value : 10)
    */
-  id: string,
   searchLoginTerm: string | null,
   searchEmailTerm: string | null,
   sortBy: string | 'createdAt',

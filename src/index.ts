@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express'
-import dotenv from 'dotenv'
+import { settings } from '../settings'
 import { connectDB } from './database/database-config'
 import { blogsService } from './domain/blogs-service'
 import { postsService } from './domain/posts-service'
@@ -11,9 +11,8 @@ import { commentsRouter } from './Routes/comments-router'
 import { postsRouter } from './Routes/posts-router'
 import { usersRouter } from './Routes/users-router'
 
-dotenv.config()
 const app = express()
-const port = process.env.PORT || 3003
+const port = settings.PORT
 const jsonBodyMiddleware = express.json()
 app.use(jsonBodyMiddleware)
 
@@ -27,18 +26,14 @@ app.use('/users', usersRouter)
 app.use('/auth', authorizationRouter)
 app.use('/comments', commentsRouter)
 
-/**
- * ONLY FOR E2E TESTS
- */
+/** ONLY FOR E2E TESTS **/
 app.delete('/testing/all-data', async (req: Request, res: Response) => {
   await blogsService._deleteAllBlogs()
   await postsService._deleteAllPosts()
   await usersService._deleteAllUsers()
   res.sendStatus(STATUS_CODES.NO_CONTENT)
 })
-/**
- *
- */
+/**             **/
 
 const startServer = async () => {
   await connectDB()

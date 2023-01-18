@@ -1,8 +1,12 @@
 import { DeleteResult } from 'mongodb'
 import { v4 as uuidv4 } from 'uuid'
-import { blogsCollection, postsCollection } from '../database/database-config'
+import { blogsCollection, commentsCollection, postsCollection } from '../database/database-config'
+import { getCommentPaginationModel } from '../helpers/getCommentPaginationModel'
+import { getCommentViewModel } from '../helpers/getCommentViewModel'
 import { getPostPaginationModel } from '../helpers/getPostPaginationModel'
 import { getPostViewModel } from '../helpers/getPostViewModel'
+import { CommentViewModel } from '../Models/CommentsModels/CommentViewModel'
+import { PaginationCommentModel } from '../Models/CommentsModels/PaginationCommentModel'
 import { PaginationPostModel } from '../Models/PostModels/PaginationPostModel'
 import { PostViewModel } from '../Models/PostModels/PostViewModel'
 
@@ -76,14 +80,33 @@ export const postsRepository = {
     return foundPost.deletedCount === 1
   },
 
-  /**
-   * ONLY FOR E2E TESTS
-   */
+  /** POST COMMENTS **/
+  async getCommentsByPostId(
+    id: string,
+    sortBy: string,
+    sortDirection: string,
+    pageNumber: number,
+    pageSize: number,
+  ): Promise<PaginationCommentModel> {
+    const totalCount = await commentsCollection.countDocuments()
+    const pagesCount = Math.ceil(totalCount / pageSize)
+    const comments = await commentsCollection
+      .find({ postId: id })
+      .sort({ [sortBy]: sortDirection === 'desc' ? -1 : 1 })
+      .skip(pageSize * (pageNumber - 1))
+      .limit(pageSize)
+      .toArray()
+    return getCommentPaginationModel(pageSize, pageNumber, pagesCount, totalCount, comments)
+  },
+  async createCommentByPostId(newComment: CommentViewModel): Promise<CommentViewModel> {
+    await commentsCollection.insertOne(newComment)
+    return getCommentViewModel(newComment)
+  },
+  /**             **/
+
+  /** ONLY FOR E2E TESTS **/
   async _deleteAllPosts(): Promise<DeleteResult> {
     return postsCollection.deleteMany({})
   },
-  /**
-   *
-   */
-
+  /**             **/
 }

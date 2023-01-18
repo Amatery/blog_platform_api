@@ -1,10 +1,13 @@
 import { Router, Response } from 'express'
 import { commentsService } from '../domain/comments-service'
 import { STATUS_CODES } from '../helpers/StatusCodes'
+import { authMiddleware } from '../middlewares/auth-middleware'
+import { validateContent } from '../middlewares/comment-body-validators'
+import { inputValidationMiddleware } from '../middlewares/input-validation-middleware'
 import { CommentInputModel } from '../Models/CommentsModels/CommentInputModel'
 import { CommentViewModel } from '../Models/CommentsModels/CommentViewModel'
 import { URIParamsCommentIdModel } from '../Models/CommentsModels/URIParamsCommentIdModel'
-import { RequestWithParams, RequestWithParamsAndBody } from '../types'
+import { RequestWithParams, RequestWithParamsAndBody } from '../types/types'
 
 export const commentsRouter = Router({})
 
@@ -24,6 +27,9 @@ commentsRouter.get(
 
 commentsRouter.put(
   '/:id',
+  authMiddleware,
+  validateContent,
+  inputValidationMiddleware,
   async (req: RequestWithParamsAndBody<URIParamsCommentIdModel, CommentInputModel>, res: Response) => {
     const { id } = req.params
     const { content } = req.body
@@ -36,13 +42,17 @@ commentsRouter.put(
   },
 )
 
-commentsRouter.delete('/:id', async (req: RequestWithParams<URIParamsCommentIdModel>, res: Response) => {
-  const { id } = req.params
-  const deletedComment = await commentsService.deleteCommentById(id)
-  if (!deletedComment) {
-    res.sendStatus(STATUS_CODES.NOT_FOUND)
-    return
-  }
-  res.sendStatus(STATUS_CODES.NO_CONTENT)
-})
+commentsRouter.delete(
+  '/:id',
+  authMiddleware,
+  async (req: RequestWithParams<URIParamsCommentIdModel>, res: Response) => {
+    const { id } = req.params
+    const deletedComment = await commentsService.deleteCommentById(id)
+    if (!deletedComment) {
+      res.sendStatus(STATUS_CODES.NOT_FOUND)
+      return
+    }
+    res.sendStatus(STATUS_CODES.NO_CONTENT)
+  },
+)
 

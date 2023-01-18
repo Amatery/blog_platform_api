@@ -1,5 +1,6 @@
-import { DeleteResult } from 'mongodb'
+import { DeleteResult, ObjectId } from 'mongodb'
 import { PaginationUserModel } from '../Models/UserModels/PaginationUserModel'
+import { UserAuthMeViewModel } from '../Models/UserModels/UserAuthMeViewModel'
 import { UserViewModel } from '../Models/UserModels/UserViewModel'
 import { usersRepository } from '../Repositories/users-repository'
 import { v4 as uuidv4 } from 'uuid'
@@ -23,8 +24,11 @@ export const usersService = {
       pageSize,
     )
   },
-  async getUserById(id: string) {
+  async getUserById(id: string): Promise<UserViewModel | null> {
     return usersRepository.getUserById(id)
+  },
+  async _getUserByMongoId(id: ObjectId): Promise<UserAuthMeViewModel | null>{
+    return usersRepository._getUserByMongoId(id)
   },
   async createUser(login: string, password: string, email: string): Promise<UserViewModel> {
     const passwordSalt = await bcrypt.genSalt(10)
@@ -45,13 +49,9 @@ export const usersService = {
   async _generateHash(password: string, salt: string) {
     return bcrypt.hash(password, salt)
   },
-  /**
-   * ONLY FOR E2E TESTS
-   */
+  /** ONLY FOR E2E TESTS **/
   async _deleteAllUsers(): Promise<DeleteResult> {
     return usersRepository._deleteAllUsers()
   },
-  /**
-   *
-   */
+  /**             **/
 }

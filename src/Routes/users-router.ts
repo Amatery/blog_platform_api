@@ -9,13 +9,15 @@ import { URIParamsUserIdModel } from '../Models/UserModels/URIParamsUserIdModel'
 import { UserInputModel } from '../Models/UserModels/UserInputModel'
 import { UserQueryModel } from '../Models/UserModels/UserQueryModel'
 import { UserViewModel } from '../Models/UserModels/UserViewModel'
-import { RequestWithBody, RequestWithParams, RequestWithQuery } from '../types'
+import { RequestWithBody, RequestWithParams, RequestWithQuery } from '../types/types'
 
 export const usersRouter = Router({})
 
 
 usersRouter.get(
-  '/', async (req: RequestWithQuery<UserQueryModel>, res: Response<PaginationUserModel>) => {
+  '/',
+  basicAuthMiddleware,
+  async (req: RequestWithQuery<UserQueryModel>, res: Response<PaginationUserModel>) => {
     const {
       searchLoginTerm = null,
       searchEmailTerm = null,
@@ -68,7 +70,9 @@ usersRouter.post(
   },
 )
 
-usersRouter.delete('/:id', basicAuthMiddleware,
+usersRouter.delete(
+  '/:id',
+  basicAuthMiddleware,
   async (req: RequestWithParams<URIParamsUserIdModel>, res: Response) => {
     const { id } = req.params
     const deletedUser = await usersService.deleteUserById(id)

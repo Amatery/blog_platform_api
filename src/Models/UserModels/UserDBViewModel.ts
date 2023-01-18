@@ -1,10 +1,14 @@
+import { ObjectId } from 'mongodb'
+
 export type UserDBViewModel = {
   /**
+   * mongoId
    * user ID
    * user login name
    * user email
    * user creation date
    */
+  _id?: ObjectId
   id: string,
   login: string,
   email: string,

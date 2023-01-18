@@ -1,13 +1,8 @@
+import { UserDBViewModel } from '../Models/UserModels/UserDBViewModel'
 import { usersRepository } from '../Repositories/users-repository'
-import { usersService } from './users-service'
 
 export const authorizationService = {
-  async authorize(loginOrEmail: string, password: string): Promise<boolean> {
-    const user = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
-    if (user === null) {
-      return false
-    }
-    const passwordHash = await usersService._generateHash(password, user.passwordSalt)
-    return user.passwordHash === passwordHash
+  async authorize(loginOrEmail: string): Promise<UserDBViewModel | null> {
+    return usersRepository.findUserByLoginOrEmail(loginOrEmail)
   },
 }

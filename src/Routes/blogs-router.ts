@@ -25,7 +25,7 @@ import {
   RequestWithParamsAndBody,
   RequestWithQuery,
   RequestWithQueryAndParams,
-} from '../types'
+} from '../types/types'
 
 
 export const blogsRouter = Router({})

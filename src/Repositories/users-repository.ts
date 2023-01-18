@@ -1,8 +1,10 @@
-import { DeleteResult } from 'mongodb'
+import { DeleteResult, ObjectId } from 'mongodb'
 import { usersCollection } from '../database/database-config'
+import { getUserAuthMeViewModel } from '../helpers/getUserAuthMeViewModel'
 import { getUserPaginationModel } from '../helpers/getUserPaginationModel'
 import { getUserViewModel } from '../helpers/getUserViewModel'
 import { PaginationUserModel } from '../Models/UserModels/PaginationUserModel'
+import { UserAuthMeViewModel } from '../Models/UserModels/UserAuthMeViewModel'
 import { UserDBViewModel } from '../Models/UserModels/UserDBViewModel'
 import { UserViewModel } from '../Models/UserModels/UserViewModel'
 
@@ -51,6 +53,10 @@ export const usersRepository = {
   async getUserById(id: string): Promise<UserViewModel | null> {
     const foundUser = await usersCollection.findOne({ id })
     return foundUser === null ? null : getUserViewModel(foundUser)
+  },
+  async _getUserByMongoId(id: ObjectId): Promise<UserAuthMeViewModel | null> {
+    const foundUser = await usersCollection.findOne(id)
+    return foundUser === null ? null : getUserAuthMeViewModel(foundUser)
   },
   async createUser(user: UserDBViewModel): Promise<UserViewModel> {
     await usersCollection.insertOne(user)

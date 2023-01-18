@@ -1,7 +1,7 @@
-import { NextFunction, Request, Response } from 'express'
+import { NextFunction, Response } from 'express'
 import { STATUS_CODES } from '../helpers/StatusCodes'
 
-export const basicAuthMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const basicAuthMiddleware = (req: any, res: Response, next: NextFunction) => {
   const auth = {
     login: 'admin',
     password: 'qwerty',
