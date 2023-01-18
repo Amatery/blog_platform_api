@@ -1,6 +1,6 @@
 import { body } from 'express-validator'
 
-export const validateContent = body('content')
+export const validateCommentContent = body('content')
   .isString()
   .trim()
   .isLength({

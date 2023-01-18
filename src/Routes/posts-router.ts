@@ -3,6 +3,7 @@ import { postsService } from '../domain/posts-service'
 import { STATUS_CODES } from '../helpers/StatusCodes'
 import { authMiddleware } from '../middlewares/auth-middleware'
 import { basicAuthMiddleware } from '../middlewares/basic-auth-middleware'
+import { validateCommentContent } from '../middlewares/comment-body-validators'
 import { inputValidationMiddleware } from '../middlewares/input-validation-middleware'
 import {
   validateBlogId,
@@ -130,7 +131,7 @@ postsRouter.get(
 postsRouter.post(
   '/:id/comments',
   authMiddleware,
-  validateContent,
+  validateCommentContent,
   inputValidationMiddleware,
   async (req: RequestWithParamsAndBody<URIParamsPostIdModel, CommentInputModel>, res: Response<CommentViewModel>) => {
     const { user } = req

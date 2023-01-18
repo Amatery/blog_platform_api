@@ -2,7 +2,7 @@ import { Router, Response } from 'express'
 import { commentsService } from '../domain/comments-service'
 import { STATUS_CODES } from '../helpers/StatusCodes'
 import { authMiddleware } from '../middlewares/auth-middleware'
-import { validateContent } from '../middlewares/comment-body-validators'
+import { validateCommentContent } from '../middlewares/comment-body-validators'
 import { inputValidationMiddleware } from '../middlewares/input-validation-middleware'
 import { CommentInputModel } from '../Models/CommentsModels/CommentInputModel'
 import { CommentViewModel } from '../Models/CommentsModels/CommentViewModel'
@@ -28,7 +28,7 @@ commentsRouter.get(
 commentsRouter.put(
   '/:id',
   authMiddleware,
-  validateContent,
+  validateCommentContent,
   inputValidationMiddleware,
   async (req: RequestWithParamsAndBody<URIParamsCommentIdModel, CommentInputModel>, res: Response) => {
     const { id } = req.params
