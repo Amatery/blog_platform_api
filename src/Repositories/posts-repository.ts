@@ -91,7 +91,7 @@ export const postsRepository = {
   ): Promise<PaginationCommentModel | null> {
     const foundPost = await postsCollection.findOne({ id })
     if (foundPost) {
-      const totalCount = await commentsCollection.countDocuments()
+      const totalCount = await commentsCollection.countDocuments({ postId: id })
       const pagesCount = Math.ceil(totalCount / pageSize)
       const comments = await commentsCollection
         .find({ postId: id })
