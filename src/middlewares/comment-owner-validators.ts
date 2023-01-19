@@ -12,7 +12,7 @@ export const validateCommentOwner = param('id')
     if (foundComment === null) {
       return Promise.reject(STATUS_CODES.NOT_FOUND)
     }
-    if (foundComment.userId === req.user.id) {
+    if (foundComment.userId === req.user.userId) {
       return true
     } else {
       return Promise.reject(STATUS_CODES.FORBIDDEN)
