@@ -1,10 +1,10 @@
 import { DeleteResult } from 'mongodb'
 import { v4 as uuidv4 } from 'uuid'
-import { BlogViewModel } from '../Models/BlogModels/BlogViewModel'
-import { PaginationBlogModel } from '../Models/BlogModels/PaginationBlogModel'
-import { PaginationPostModel } from '../Models/PostModels/PaginationPostModel'
-import { PostViewModel } from '../Models/PostModels/PostViewModel'
-import { blogsRepository } from '../Repositories/blogs-repository'
+import { BlogViewModel } from '../models/BlogModels/BlogViewModel'
+import { PaginationBlogModel } from '../models/BlogModels/PaginationBlogModel'
+import { PaginationPostModel } from '../models/PostModels/PaginationPostModel'
+import { PostViewModel } from '../models/PostModels/PostViewModel'
+import { blogsRepository } from '../repositories/blogs-repository'
 
 export const blogsService = {
   async getBlogs(

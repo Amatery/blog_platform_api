@@ -1,5 +1,5 @@
 import { WithId } from 'mongodb'
-import { CommentViewModel } from '../Models/CommentsModels/CommentViewModel'
+import { CommentViewModel } from '../models/CommentsModels/CommentViewModel'
 
 export const getCommentViewModel = (c: WithId<CommentViewModel> | CommentViewModel): CommentViewModel => {
   return {

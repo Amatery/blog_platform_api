@@ -5,11 +5,11 @@ import { getCommentPaginationModel } from '../helpers/getCommentPaginationModel'
 import { getCommentViewModel } from '../helpers/getCommentViewModel'
 import { getPostPaginationModel } from '../helpers/getPostPaginationModel'
 import { getPostViewModel } from '../helpers/getPostViewModel'
-import { CommentViewModel } from '../Models/CommentsModels/CommentViewModel'
-import { PaginationCommentModel } from '../Models/CommentsModels/PaginationCommentModel'
-import { PaginationPostModel } from '../Models/PostModels/PaginationPostModel'
-import { PostViewModel } from '../Models/PostModels/PostViewModel'
-import { UserAuthMeViewModel } from '../Models/UserModels/UserAuthMeViewModel'
+import { CommentViewModel } from '../models/CommentsModels/CommentViewModel'
+import { PaginationCommentModel } from '../models/CommentsModels/PaginationCommentModel'
+import { PaginationPostModel } from '../models/PostModels/PaginationPostModel'
+import { PostViewModel } from '../models/PostModels/PostViewModel'
+import { UserAuthMeViewModel } from '../models/UserModels/UserAuthMeViewModel'
 
 
 export const postsRepository = {

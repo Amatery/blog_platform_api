@@ -1,5 +1,5 @@
 import { WithId } from 'mongodb'
-import { BlogViewModel } from '../Models/BlogModels/BlogViewModel'
+import { BlogViewModel } from '../models/BlogModels/BlogViewModel'
 
 export const getBlogViewModel = (blog: WithId<BlogViewModel> | BlogViewModel): BlogViewModel => {
   return {

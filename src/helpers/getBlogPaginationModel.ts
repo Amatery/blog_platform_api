@@ -1,5 +1,5 @@
-import { BlogViewModel } from '../Models/BlogModels/BlogViewModel'
-import { PaginationBlogModel } from '../Models/BlogModels/PaginationBlogModel'
+import { BlogViewModel } from '../models/BlogModels/BlogViewModel'
+import { PaginationBlogModel } from '../models/BlogModels/PaginationBlogModel'
 
 export const getBlogPaginationModel = (
   pageSize: number,

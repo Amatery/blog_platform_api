@@ -1,5 +1,5 @@
-import { PaginationPostModel } from '../Models/PostModels/PaginationPostModel'
-import { PostViewModel } from '../Models/PostModels/PostViewModel'
+import { PaginationPostModel } from '../models/PostModels/PaginationPostModel'
+import { PostViewModel } from '../models/PostModels/PostViewModel'
 
 export const getPostPaginationModel = (
   pageSize: number,

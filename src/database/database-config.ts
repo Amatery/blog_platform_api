@@ -1,9 +1,9 @@
 import { MongoClient } from 'mongodb'
 import { settings } from '../../settings'
-import { BlogViewModel } from '../Models/BlogModels/BlogViewModel'
-import { CommentViewModel } from '../Models/CommentsModels/CommentViewModel'
-import { PostViewModel } from '../Models/PostModels/PostViewModel'
-import { UserDBViewModel } from '../Models/UserModels/UserDBViewModel'
+import { BlogViewModel } from '../models/BlogModels/BlogViewModel'
+import { CommentViewModel } from '../models/CommentsModels/CommentViewModel'
+import { PostViewModel } from '../models/PostModels/PostViewModel'
+import { UserDBViewModel } from '../models/UserModels/UserDBViewModel'
 
 
 const client = new MongoClient(settings.CLUSTER_ACCESS_URL)

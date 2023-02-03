@@ -1,5 +1,5 @@
 import { WithId } from 'mongodb'
-import { UserViewModel } from '../Models/UserModels/UserViewModel'
+import { UserViewModel } from '../models/UserModels/UserViewModel'
 
 export const getUserViewModel = (user: WithId<UserViewModel> | UserViewModel): UserViewModel => {
   return {

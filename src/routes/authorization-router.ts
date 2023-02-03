@@ -5,9 +5,9 @@ import { STATUS_CODES } from '../helpers/StatusCodes'
 import { authMiddleware } from '../middlewares/auth-middleware'
 import { inputValidationMiddleware } from '../middlewares/input-validation-middleware'
 import { validateLoginOrEmail, validatePassword } from '../middlewares/login-body-validators'
-import { LoginInputModel } from '../Models/AuthorizationModels/LoginInputModel'
-import { LoginSuccessViewModel } from '../Models/AuthorizationModels/LoginSuccessViewModel'
-import { UserAuthMeViewModel } from '../Models/UserModels/UserAuthMeViewModel'
+import { LoginInputModel } from '../models/AuthorizationModels/LoginInputModel'
+import { LoginSuccessViewModel } from '../models/AuthorizationModels/LoginSuccessViewModel'
+import { UserAuthMeViewModel } from '../models/UserModels/UserAuthMeViewModel'
 import { RequestWithBody } from '../types/types'
 
 export const authorizationRouter = Router({})

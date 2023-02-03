@@ -3,10 +3,10 @@ import { usersCollection } from '../database/database-config'
 import { getUserAuthMeViewModel } from '../helpers/getUserAuthMeViewModel'
 import { getUserPaginationModel } from '../helpers/getUserPaginationModel'
 import { getUserViewModel } from '../helpers/getUserViewModel'
-import { PaginationUserModel } from '../Models/UserModels/PaginationUserModel'
-import { UserAuthMeViewModel } from '../Models/UserModels/UserAuthMeViewModel'
-import { UserDBViewModel } from '../Models/UserModels/UserDBViewModel'
-import { UserViewModel } from '../Models/UserModels/UserViewModel'
+import { PaginationUserModel } from '../models/UserModels/PaginationUserModel'
+import { UserAuthMeViewModel } from '../models/UserModels/UserAuthMeViewModel'
+import { UserDBViewModel } from '../models/UserModels/UserDBViewModel'
+import { UserViewModel } from '../models/UserModels/UserViewModel'
 
 export const usersRepository = {
   async getUsers(

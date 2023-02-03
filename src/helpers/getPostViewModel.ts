@@ -1,4 +1,4 @@
-import { PostViewModel } from '../Models/PostModels/PostViewModel'
+import { PostViewModel } from '../models/PostModels/PostViewModel'
 
 export const getPostViewModel = (post: PostViewModel): PostViewModel => {
   return {

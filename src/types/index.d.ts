@@ -1,4 +1,4 @@
-import { UserAuthMeViewModel } from '../Models/UserModels/UserAuthMeViewModel'
+import { UserAuthMeViewModel } from '../models/UserModels/UserAuthMeViewModel'
 
 declare global {
   declare namespace Express {

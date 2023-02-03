@@ -1,8 +1,8 @@
 import { DeleteResult, ObjectId } from 'mongodb'
-import { PaginationUserModel } from '../Models/UserModels/PaginationUserModel'
-import { UserAuthMeViewModel } from '../Models/UserModels/UserAuthMeViewModel'
-import { UserViewModel } from '../Models/UserModels/UserViewModel'
-import { usersRepository } from '../Repositories/users-repository'
+import { PaginationUserModel } from '../models/UserModels/PaginationUserModel'
+import { UserAuthMeViewModel } from '../models/UserModels/UserAuthMeViewModel'
+import { UserViewModel } from '../models/UserModels/UserViewModel'
+import { usersRepository } from '../repositories/users-repository'
 import { v4 as uuidv4 } from 'uuid'
 import bcrypt from 'bcrypt'
 

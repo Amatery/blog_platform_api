@@ -9,16 +9,16 @@ import {
   validateShortDescription,
   validateTitle,
 } from '../middlewares/posts-body-validators'
-import { BlogInputModel } from '../Models/BlogModels/BlogInputModel'
-import { BlogQueryModel } from '../Models/BlogModels/BlogQueryModel'
-import { BlogViewModel } from '../Models/BlogModels/BlogViewModel'
-import { PaginationBlogModel } from '../Models/BlogModels/PaginationBlogModel'
-import { PaginationPostModel } from '../Models/PostModels/PaginationPostModel'
-import { URIParamsBlogIdModel } from '../Models/BlogModels/URIParamsBlogIdModel'
-import { PostInputModel } from '../Models/PostModels/PostInputModel'
-import { PostQueryModel } from '../Models/PostModels/PostQueryModel'
-import { PostViewModel } from '../Models/PostModels/PostViewModel'
-import { URIParamsPostIdModel } from '../Models/PostModels/URIParamsPostIdModel'
+import { BlogInputModel } from '../models/BlogModels/BlogInputModel'
+import { BlogQueryModel } from '../models/BlogModels/BlogQueryModel'
+import { BlogViewModel } from '../models/BlogModels/BlogViewModel'
+import { PaginationBlogModel } from '../models/BlogModels/PaginationBlogModel'
+import { PaginationPostModel } from '../models/PostModels/PaginationPostModel'
+import { URIParamsBlogIdModel } from '../models/BlogModels/URIParamsBlogIdModel'
+import { PostInputModel } from '../models/PostModels/PostInputModel'
+import { PostQueryModel } from '../models/PostModels/PostQueryModel'
+import { PostViewModel } from '../models/PostModels/PostViewModel'
+import { URIParamsPostIdModel } from '../models/PostModels/URIParamsPostIdModel'
 import {
   RequestWithBody,
   RequestWithParams,

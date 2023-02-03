@@ -5,10 +5,10 @@ import { getBlogPaginationModel } from '../helpers/getBlogPaginationModel'
 import { getBlogViewModel } from '../helpers/getBlogViewModel'
 import { getPostPaginationModel } from '../helpers/getPostPaginationModel'
 import { getPostViewModel } from '../helpers/getPostViewModel'
-import { BlogViewModel } from '../Models/BlogModels/BlogViewModel'
-import { PaginationBlogModel } from '../Models/BlogModels/PaginationBlogModel'
-import { PaginationPostModel } from '../Models/PostModels/PaginationPostModel'
-import { PostViewModel } from '../Models/PostModels/PostViewModel'
+import { BlogViewModel } from '../models/BlogModels/BlogViewModel'
+import { PaginationBlogModel } from '../models/BlogModels/PaginationBlogModel'
+import { PaginationPostModel } from '../models/PostModels/PaginationPostModel'
+import { PostViewModel } from '../models/PostModels/PostViewModel'
 
 export const blogsRepository = {
   async getBlogs(

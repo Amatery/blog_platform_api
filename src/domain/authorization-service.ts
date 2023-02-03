@@ -1,5 +1,5 @@
-import { UserDBViewModel } from '../Models/UserModels/UserDBViewModel'
-import { usersRepository } from '../Repositories/users-repository'
+import { UserDBViewModel } from '../models/UserModels/UserDBViewModel'
+import { usersRepository } from '../repositories/users-repository'
 import { usersService } from './users-service'
 
 export const authorizationService = {

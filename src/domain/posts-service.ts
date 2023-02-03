@@ -1,10 +1,10 @@
 import { DeleteResult } from 'mongodb'
-import { CommentViewModel } from '../Models/CommentsModels/CommentViewModel'
-import { PaginationCommentModel } from '../Models/CommentsModels/PaginationCommentModel'
-import { PaginationPostModel } from '../Models/PostModels/PaginationPostModel'
-import { PostViewModel } from '../Models/PostModels/PostViewModel'
-import { UserAuthMeViewModel } from '../Models/UserModels/UserAuthMeViewModel'
-import { postsRepository } from '../Repositories/posts-repository'
+import { CommentViewModel } from '../models/CommentsModels/CommentViewModel'
+import { PaginationCommentModel } from '../models/CommentsModels/PaginationCommentModel'
+import { PaginationPostModel } from '../models/PostModels/PaginationPostModel'
+import { PostViewModel } from '../models/PostModels/PostViewModel'
+import { UserAuthMeViewModel } from '../models/UserModels/UserAuthMeViewModel'
+import { postsRepository } from '../repositories/posts-repository'
 
 
 export const postsService = {

@@ -1,4 +1,4 @@
-import { UserViewModel } from '../Models/UserModels/UserViewModel'
+import { UserViewModel } from '../models/UserModels/UserViewModel'
 
 export const getUserPaginationModel = (
   pageSize: number,

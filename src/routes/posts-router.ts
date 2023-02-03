@@ -11,15 +11,15 @@ import {
   validateShortDescription,
   validateTitle,
 } from '../middlewares/posts-body-validators'
-import { CommentInputModel } from '../Models/CommentsModels/CommentInputModel'
-import { CommentQueryModel } from '../Models/CommentsModels/CommentQueryModel'
-import { CommentViewModel } from '../Models/CommentsModels/CommentViewModel'
-import { PaginationCommentModel } from '../Models/CommentsModels/PaginationCommentModel'
-import { PaginationPostModel } from '../Models/PostModels/PaginationPostModel'
-import { PostInputModel } from '../Models/PostModels/PostInputModel'
-import { PostQueryModel } from '../Models/PostModels/PostQueryModel'
-import { PostViewModel } from '../Models/PostModels/PostViewModel'
-import { URIParamsPostIdModel } from '../Models/PostModels/URIParamsPostIdModel'
+import { CommentInputModel } from '../models/CommentsModels/CommentInputModel'
+import { CommentQueryModel } from '../models/CommentsModels/CommentQueryModel'
+import { CommentViewModel } from '../models/CommentsModels/CommentViewModel'
+import { PaginationCommentModel } from '../models/CommentsModels/PaginationCommentModel'
+import { PaginationPostModel } from '../models/PostModels/PaginationPostModel'
+import { PostInputModel } from '../models/PostModels/PostInputModel'
+import { PostQueryModel } from '../models/PostModels/PostQueryModel'
+import { PostViewModel } from '../models/PostModels/PostViewModel'
+import { URIParamsPostIdModel } from '../models/PostModels/URIParamsPostIdModel'
 import {
   RequestWithBody,
   RequestWithParams,

@@ -1,5 +1,5 @@
-import { UserAuthMeViewModel } from '../Models/UserModels/UserAuthMeViewModel'
-import { UserViewModel } from '../Models/UserModels/UserViewModel'
+import { UserAuthMeViewModel } from '../models/UserModels/UserAuthMeViewModel'
+import { UserViewModel } from '../models/UserModels/UserViewModel'
 
 export const getUserAuthMeViewModel = (u: UserViewModel): UserAuthMeViewModel => {
   return {

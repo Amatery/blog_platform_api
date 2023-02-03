@@ -1,7 +1,7 @@
 import { param } from 'express-validator'
 import { commentsService } from '../domain/comments-service'
 import { STATUS_CODES } from '../helpers/StatusCodes'
-import { CommentViewModel } from '../Models/CommentsModels/CommentViewModel'
+import { CommentViewModel } from '../models/CommentsModels/CommentViewModel'
 
 export const validateCommentOwner = param('id')
   .isString()

@@ -6,11 +6,11 @@ import { commentsService } from './domain/comments-service'
 import { postsService } from './domain/posts-service'
 import { usersService } from './domain/users-service'
 import { STATUS_CODES } from './helpers/StatusCodes'
-import { authorizationRouter } from './Routes/authorization-router'
-import { blogsRouter } from './Routes/blogs-router'
-import { commentsRouter } from './Routes/comments-router'
-import { postsRouter } from './Routes/posts-router'
-import { usersRouter } from './Routes/users-router'
+import { authorizationRouter } from './routes/authorization-router'
+import { blogsRouter } from './routes/blogs-router'
+import { commentsRouter } from './routes/comments-router'
+import { postsRouter } from './routes/posts-router'
+import { usersRouter } from './routes/users-router'
 
 const app = express()
 const port = settings.PORT

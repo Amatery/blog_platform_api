@@ -6,9 +6,9 @@ import { validateCommentContent } from '../middlewares/comment-body-validators'
 import { validateCommentOwner } from '../middlewares/comment-owner-validators'
 import { inputValidationMiddleware } from '../middlewares/input-validation-middleware'
 import { ownerValidationMiddleware } from '../middlewares/owner-validation-middleware'
-import { CommentInputModel } from '../Models/CommentsModels/CommentInputModel'
-import { CommentViewModel } from '../Models/CommentsModels/CommentViewModel'
-import { URIParamsCommentIdModel } from '../Models/CommentsModels/URIParamsCommentIdModel'
+import { CommentInputModel } from '../models/CommentsModels/CommentInputModel'
+import { CommentViewModel } from '../models/CommentsModels/CommentViewModel'
+import { URIParamsCommentIdModel } from '../models/CommentsModels/URIParamsCommentIdModel'
 import { RequestWithParams, RequestWithParamsAndBody } from '../types/types'
 
 export const commentsRouter = Router({})

@@ -1,6 +1,6 @@
 import { DeleteResult } from 'mongodb'
-import { CommentViewModel } from '../Models/CommentsModels/CommentViewModel'
-import { commentsRepository } from '../Repositories/comments-repository'
+import { CommentViewModel } from '../models/CommentsModels/CommentViewModel'
+import { commentsRepository } from '../repositories/comments-repository'
 
 export const commentsService = {
   async getCommentById(id: string): Promise<CommentViewModel | null> {
