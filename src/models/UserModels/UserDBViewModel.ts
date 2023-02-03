@@ -15,4 +15,9 @@ export type UserDBViewModel = {
   passwordHash: string,
   passwordSalt: string,
   createdAt: string
+  emailConfirmation: {
+    confirmationCode: string,
+    expirationDate: Date,
+    isConfirmed: boolean
+  }
 }

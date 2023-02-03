@@ -5,6 +5,7 @@ import { UserViewModel } from '../models/UserModels/UserViewModel'
 import { usersRepository } from '../repositories/users-repository'
 import { v4 as uuidv4 } from 'uuid'
 import bcrypt from 'bcrypt'
+import { add } from 'date-fns'
 
 export const usersService = {
   async getUsers(
@@ -27,7 +28,7 @@ export const usersService = {
   async getUserById(id: string): Promise<UserViewModel | null> {
     return usersRepository.getUserById(id)
   },
-  async _getUserByMongoId(id: ObjectId): Promise<UserAuthMeViewModel | null>{
+  async _getUserByMongoId(id: ObjectId): Promise<UserAuthMeViewModel | null> {
     return usersRepository._getUserByMongoId(id)
   },
   async createUser(login: string, password: string, email: string): Promise<UserViewModel> {
@@ -40,6 +41,14 @@ export const usersService = {
       passwordSalt,
       email,
       createdAt: new Date().toISOString(),
+      emailConfirmation: {
+        confirmationCode: uuidv4(),
+        expirationDate: add(new Date(), {
+          hours: 1,
+          minutes: 30,
+        }),
+        isConfirmed: false,
+      },
     }
     return usersRepository.createUser(newUser)
   },

@@ -6,4 +6,8 @@ export const settings = {
   PORT: process.env.PORT || 3003,
   CLUSTER_ACCESS_URL: process.env.CLUSTER_ACCESS_URL || 'mongodb://localhost:27017',
   JWT_SECRET: process.env.JWT_SECRET || '123',
+  PLATFORM_EMAIL: process.env.PLATFORM_EMAIL,
+  PLATFORM_EMAIL_PASSWORD: process.env.PLATFORM_EMAIL_PASSWORD,
+  PLATFORM_GMAIL_APP_PASSWORD: process.env.PLATFORM_GMAIL_APP_PASSWORD,
+  CONFIRMATION_CODE_LINK: process.env.CONFIRMATION_CODE_LINK,
 }

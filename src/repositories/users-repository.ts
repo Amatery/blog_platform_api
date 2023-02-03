@@ -69,6 +69,13 @@ export const usersRepository = {
   async findUserByLoginOrEmail(credentials: string): Promise<UserDBViewModel | null> {
     return usersCollection.findOne({ $or: [{ email: credentials }, { login: credentials }] })
   },
+  async findUserByConfirmationCode(code: string): Promise<any> {
+    return usersCollection.findOne({ 'emailConfirmation.confirmationCode': code })
+  },
+  async updateEmailConfirmation(id: string): Promise<boolean> {
+    const result = await usersCollection.updateOne({ id }, { $set: { 'emailConfirmation.isConfirmed': true } })
+    return result.modifiedCount === 1
+  },
   /**
    * ONLY FOR E2E TESTS
    */
