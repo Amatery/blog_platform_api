@@ -54,7 +54,7 @@ authorizationRouter.post(
   '/registration-email-resending',
   async (req: RequestWithBody<RegistrationConfirmationInputModel>, res: Response) => {
     const { email } = req.body
-    const result = authorizationService.resendEmailConfirmation(email)
+    const result = await authorizationService.resendEmailConfirmation(email)
     if (!result) {
       res.sendStatus(STATUS_CODES.BAD_REQUEST)
       return
