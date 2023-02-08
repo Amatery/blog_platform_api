@@ -3,6 +3,7 @@ import { jwtService } from '../application/jwt-service'
 import { authorizationService } from '../domain/authorization-service'
 import { STATUS_CODES } from '../helpers/StatusCodes'
 import { authMiddleware } from '../middlewares/auth-middleware'
+import { isEmailOrLoginAlreadyExist } from '../middlewares/credentials-validation-middleware'
 import { inputValidationMiddleware } from '../middlewares/input-validation-middleware'
 import { validateLoginOrEmail, validatePassword } from '../middlewares/login-body-validators'
 import { validateEmail, validateLogin } from '../middlewares/users-body-validators'
@@ -21,6 +22,7 @@ authorizationRouter.post(
   validateLogin,
   validateEmail,
   validatePassword,
+  isEmailOrLoginAlreadyExist,
   inputValidationMiddleware,
   async (req: RequestWithBody<RegistrationInputModel>, res: Response) => {
     const {
@@ -33,7 +35,7 @@ authorizationRouter.post(
       res.sendStatus(STATUS_CODES.BAD_REQUEST)
       return
     }
-    res.sendStatus(STATUS_CODES.CREATED)
+    res.sendStatus(STATUS_CODES.NO_CONTENT)
   },
 )
 authorizationRouter.post(

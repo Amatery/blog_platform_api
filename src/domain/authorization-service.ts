@@ -52,7 +52,15 @@ export const authorizationService = {
     if (user === null) {
       return false
     }
-    return emailManager.sendConfirmationMessage(user)
+    if (user.emailConfirmation.isConfirmed) {
+      return false
+    }
+    try {
+      await emailManager.sendConfirmationMessage(user)
+    } catch (e) {
+      return false
+    }
+    return user
   },
   async createUser(login: string, email: string, password: string): Promise<UserDBViewModel> {
     const passwordSalt = await bcrypt.genSalt(10)
