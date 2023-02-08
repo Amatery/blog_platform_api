@@ -16,3 +16,15 @@ export const isEmailOrLoginAlreadyExist = body(['email', 'login'])
       return Promise.reject('This login already exists')
     }
   })
+
+export const isEmailCorrect = body('email')
+  .isString()
+  .trim()
+  .matches('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$')
+  .custom(async v => {
+    const foundUser = await usersCollection.findOne({ email: v })
+    if (foundUser === null) {
+      return Promise.reject('Email is incorrect')
+    }
+    return true
+  })
