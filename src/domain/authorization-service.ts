@@ -53,9 +53,6 @@ export const authorizationService = {
     if (user === null) {
       return false
     }
-    if (user.emailConfirmation.isConfirmed) {
-      return false
-    }
     try {
       await emailManager.sendConfirmationMessage(user)
     } catch (e) {

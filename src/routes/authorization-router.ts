@@ -4,7 +4,10 @@ import { authorizationService } from '../domain/authorization-service'
 import { STATUS_CODES } from '../helpers/StatusCodes'
 import { authMiddleware } from '../middlewares/auth-middleware'
 import { confirmationCodeValidationMiddleware } from '../middlewares/confirmation-code-validation-middleware'
-import { isEmailCorrect, isEmailOrLoginAlreadyExist } from '../middlewares/credentials-validation-middleware'
+import {
+  isEmailCorrectAndConfirmed,
+  isEmailOrLoginAlreadyExist,
+} from '../middlewares/credentials-validation-middleware'
 import { inputValidationMiddleware } from '../middlewares/input-validation-middleware'
 import { validateLoginOrEmail, validatePassword } from '../middlewares/login-body-validators'
 import { validateEmail, validateLogin } from '../middlewares/users-body-validators'
@@ -55,7 +58,7 @@ authorizationRouter.post(
 )
 authorizationRouter.post(
   '/registration-email-resending',
-  isEmailCorrect,
+  isEmailCorrectAndConfirmed,
   inputValidationMiddleware,
   async (req: RequestWithBody<RegistrationConfirmationInputModel>, res: Response) => {
     const { email } = req.body

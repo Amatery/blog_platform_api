@@ -17,7 +17,7 @@ export const isEmailOrLoginAlreadyExist = body(['email', 'login'])
     }
   })
 
-export const isEmailCorrect = body('email')
+export const isEmailCorrectAndConfirmed = body('email')
   .isString()
   .trim()
   .matches('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$')
@@ -25,6 +25,9 @@ export const isEmailCorrect = body('email')
     const foundUser = await usersCollection.findOne({ email: v })
     if (foundUser === null) {
       return Promise.reject('Email is incorrect')
+    }
+    if (foundUser.emailConfirmation.isConfirmed) {
+      return Promise.reject('This email already confirmed')
     }
     return true
   })

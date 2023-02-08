@@ -7,6 +7,7 @@ export const getCommentPaginationModel = (
   totalCount: number,
   comments: CommentViewModel[],
 ) => {
+  console.log('comments', comments)
   return {
     page,
     pagesCount,
@@ -14,10 +15,9 @@ export const getCommentPaginationModel = (
     totalCount,
     items: comments.map(c => {
       return {
+        commentatorInfo: c.commentatorInfo,
         id: c.id,
         content: c.content,
-        userId: c.userId,
-        userLogin: c.userLogin,
         createdAt: c.createdAt,
       }
     }),

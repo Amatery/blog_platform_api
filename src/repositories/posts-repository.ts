@@ -112,11 +112,13 @@ export const postsRepository = {
     const foundPost = await postsCollection.findOne({ id })
     if (foundPost) {
       const newComment = {
+        commentatorInfo: {
+          userId: user.userId,
+          userLogin: user.login,
+        },
         id: uuidv4(),
         postId: foundPost.id,
         content,
-        userId: user.userId,
-        userLogin: user.login,
         createdAt: new Date().toISOString(),
       }
       await commentsCollection.insertOne(newComment)
