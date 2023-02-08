@@ -48,6 +48,7 @@ export const authorizationService = {
     return usersRepository.updateEmailConfirmation(user.id)
   },
   async resendEmailConfirmation(email: string): Promise<SentMessageInfo | boolean> {
+    await usersRepository.generateNewConfirmationCode(email, uuidv4())
     const user = await usersRepository.findUserByLoginOrEmail(email)
     if (user === null) {
       return false

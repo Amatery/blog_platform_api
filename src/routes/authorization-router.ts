@@ -57,7 +57,6 @@ authorizationRouter.post(
   '/registration-email-resending',
   validateEmail,
   isEmailCorrect,
-  confirmationCodeValidationMiddleware,
   inputValidationMiddleware,
   async (req: RequestWithBody<RegistrationConfirmationInputModel>, res: Response) => {
     const { email } = req.body
