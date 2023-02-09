@@ -11,11 +11,13 @@ import { blogsRouter } from './routes/blogs-router'
 import { commentsRouter } from './routes/comments-router'
 import { postsRouter } from './routes/posts-router'
 import { usersRouter } from './routes/users-router'
+import cookieParser from 'cookie-parser'
 
 const app = express()
 const port = settings.PORT
 const jsonBodyMiddleware = express.json()
 app.use(jsonBodyMiddleware)
+app.use(cookieParser())
 
 app.get('/', (req, res) => {
   res.send('Welcome to blog platform API!')

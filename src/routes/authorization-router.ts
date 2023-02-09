@@ -1,8 +1,10 @@
 import { Request, Response, Router } from 'express'
+import { refreshTokenOptions } from '../../settings'
 import { jwtService } from '../application/jwt-service'
 import { authorizationService } from '../domain/authorization-service'
+import { usersService } from '../domain/users-service'
 import { STATUS_CODES } from '../helpers/StatusCodes'
-import { authMiddleware } from '../middlewares/auth-middleware'
+import { authMiddleware, validateRefreshToken } from '../middlewares/auth-middleware'
 import { confirmationCodeValidationMiddleware } from '../middlewares/confirmation-code-validation-middleware'
 import {
   isEmailCorrectAndConfirmed,
@@ -11,6 +13,7 @@ import {
 import { inputValidationMiddleware } from '../middlewares/input-validation-middleware'
 import { validateLoginOrEmail, validatePassword } from '../middlewares/login-body-validators'
 import { validateEmail, validateLogin } from '../middlewares/users-body-validators'
+import { AccessTokenInputModel } from '../models/AuthorizationModels/AccessTokenInputModel'
 import { LoginInputModel } from '../models/AuthorizationModels/LoginInputModel'
 import { LoginSuccessViewModel } from '../models/AuthorizationModels/LoginSuccessViewModel'
 import { RegistrationConfirmationInputModel } from '../models/AuthorizationModels/RegistrationConfirmationInputModel'
@@ -85,12 +88,40 @@ authorizationRouter.post(
       res.sendStatus(STATUS_CODES.UNAUTHORIZED)
       return
     }
-    const token = {
+    const accessToken = {
       accessToken: await jwtService.createJWT(user),
     }
-    res.status(STATUS_CODES.OK).json(token)
+    const refreshToken = await jwtService.createRefreshToken(user)
+    res.status(STATUS_CODES.OK)
+      .cookie('refreshToken', refreshToken, refreshTokenOptions)
+      .json(accessToken)
   },
 )
+
+authorizationRouter.post(
+  '/refresh-token',
+  validateRefreshToken,
+  async (req: RequestWithBody<AccessTokenInputModel>, res: Response) => {
+    const { refreshToken } = req.cookies
+    const user = await usersService._getUserDBModel(req.user!.userId)
+    await jwtService.addExpiredToken(user!.id, refreshToken)
+    const newAccessToken = {
+      accessToken: await jwtService.createJWT(user!),
+    }
+    const newRefreshToken = await jwtService.createRefreshToken(user!)
+    res.status(STATUS_CODES.OK)
+      .cookie('refreshToken', newRefreshToken, refreshTokenOptions)
+      .json(newAccessToken)
+  },
+)
+
+authorizationRouter.post('/logout', validateRefreshToken, async (req: Request, res: Response) => {
+  const { refreshToken } = req.cookies
+  const { user } = req
+  await jwtService.addExpiredToken(user!.userId, refreshToken)
+  res.clearCookie('refreshToken', refreshTokenOptions)
+  res.sendStatus(STATUS_CODES.NO_CONTENT)
+})
 
 authorizationRouter.get('/me', authMiddleware, async (req: Request, res: Response<UserAuthMeViewModel>) => {
   if (!req.user) {

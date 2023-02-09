@@ -58,6 +58,9 @@ export const usersRepository = {
     const foundUser = await usersCollection.findOne(id)
     return foundUser === null ? null : getUserAuthMeViewModel(foundUser)
   },
+  async _getUserDBModel(id: string): Promise<UserDBViewModel | null> {
+    return await usersCollection.findOne({ id })
+  },
   async createUser(user: UserDBViewModel): Promise<UserViewModel> {
     await usersCollection.insertOne(user)
     return getUserViewModel(user)

@@ -37,7 +37,7 @@ export const blogsRepository = {
     const foundBlog = await blogsCollection.findOne({ id })
     return foundBlog === null ? null : getBlogViewModel(foundBlog)
   },
-  async createBlog(newBlog: any): Promise<BlogViewModel> {
+  async createBlog(newBlog: BlogViewModel): Promise<BlogViewModel> {
     await blogsCollection.insertOne(newBlog)
     return getBlogViewModel(newBlog)
   },

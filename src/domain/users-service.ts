@@ -1,6 +1,7 @@
 import { DeleteResult, ObjectId } from 'mongodb'
 import { PaginationUserModel } from '../models/UserModels/PaginationUserModel'
 import { UserAuthMeViewModel } from '../models/UserModels/UserAuthMeViewModel'
+import { UserDBViewModel } from '../models/UserModels/UserDBViewModel'
 import { UserViewModel } from '../models/UserModels/UserViewModel'
 import { usersRepository } from '../repositories/users-repository'
 import { v4 as uuidv4 } from 'uuid'
@@ -30,6 +31,9 @@ export const usersService = {
   },
   async _getUserByMongoId(id: ObjectId): Promise<UserAuthMeViewModel | null> {
     return usersRepository._getUserByMongoId(id)
+  },
+  async _getUserDBModel(id: string): Promise<UserDBViewModel | null> {
+    return usersRepository._getUserDBModel(id)
   },
   async createUser(login: string, password: string, email: string): Promise<UserViewModel> {
     const passwordSalt = await bcrypt.genSalt(10)
