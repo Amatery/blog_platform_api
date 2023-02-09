@@ -19,7 +19,6 @@ export const refreshTokenOptions = {
   httpOnly: true,
   // secure: true,
   expires: add(new Date(), {
-    hours: 1,
-    // seconds: 20,
+    seconds: 20,
   }),
 }
