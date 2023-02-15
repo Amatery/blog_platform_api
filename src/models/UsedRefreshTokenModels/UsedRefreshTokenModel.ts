@@ -1,4 +1,4 @@
-export type RefreshTokenModel = {
+export type UsedRefreshTokenModel = {
   userId: string,
   refreshToken: string,
 }

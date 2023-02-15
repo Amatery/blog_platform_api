@@ -4,7 +4,7 @@ import { settings } from '../../settings'
 import { jwtService } from '../application/jwt-service'
 import { usersService } from '../domain/users-service'
 import { STATUS_CODES } from '../helpers/StatusCodes'
-import { sessionRepository } from '../repositories/session-repository'
+import { usedRefreshTokensRepository } from '../repositories/used-refresh-tokens-repository'
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   const { authorization } = req.headers
@@ -33,7 +33,7 @@ export const validateRefreshToken = async (req: Request, res: Response, next: Ne
     res.sendStatus(STATUS_CODES.UNAUTHORIZED)
     return
   }
-  const isTokenExpired = await sessionRepository.findExpiredRefreshToken(refreshToken)
+  const isTokenExpired = await usedRefreshTokensRepository.findExpiredRefreshToken(refreshToken)
   if (isTokenExpired) {
     res.sendStatus(STATUS_CODES.UNAUTHORIZED)
     return

@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 import { ObjectId } from 'mongodb'
 import { settings } from '../../settings'
 import { UserDBViewModel } from '../models/UserModels/UserDBViewModel'
-import { sessionRepository } from '../repositories/session-repository'
+import { usedRefreshTokensRepository } from '../repositories/used-refresh-tokens-repository'
 
 export const jwtService = {
   async createJWT(user: UserDBViewModel): Promise<string> {
@@ -24,6 +24,6 @@ export const jwtService = {
       userId,
       refreshToken,
     }
-    return sessionRepository.addExpiredRefreshToken(tokenInfo)
+    return usedRefreshTokensRepository.addExpiredRefreshToken(tokenInfo)
   },
 }
