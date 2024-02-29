@@ -9,6 +9,7 @@ import { STATUS_CODES } from './helpers/StatusCodes'
 import { authorizationRouter } from './routes/authorization-router'
 import { blogsRouter } from './routes/blogs-router'
 import { commentsRouter } from './routes/comments-router'
+import { devicesRouter } from './routes/devices-router';
 import { postsRouter } from './routes/posts-router'
 import { usersRouter } from './routes/users-router'
 import cookieParser from 'cookie-parser'
@@ -28,6 +29,7 @@ app.use('/posts', postsRouter)
 app.use('/users', usersRouter)
 app.use('/auth', authorizationRouter)
 app.use('/comments', commentsRouter)
+app.use('/security/devices', devicesRouter)
 
 /** ONLY FOR E2E TESTS **/
 app.delete('/testing/all-data', async (req: Request, res: Response) => {
