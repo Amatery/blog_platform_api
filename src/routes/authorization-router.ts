@@ -28,6 +28,7 @@ export const authorizationRouter = Router({});
 
 authorizationRouter.post(
   '/registration',
+  rateLimitMiddleware,
   validateLogin,
   validateEmail,
   validatePassword,
@@ -50,6 +51,7 @@ authorizationRouter.post(
 );
 authorizationRouter.post(
   '/registration-confirmation',
+  rateLimitMiddleware,
   confirmationCodeValidationMiddleware,
   inputValidationMiddleware,
   async (req: RequestWithBody<RegistrationConfirmationInputModel>, res: Response) => {
@@ -65,6 +67,7 @@ authorizationRouter.post(
 );
 authorizationRouter.post(
   '/registration-email-resending',
+  rateLimitMiddleware,
   isEmailCorrectAndConfirmed,
   inputValidationMiddleware,
   async (req: RequestWithBody<RegistrationConfirmationInputModel>, res: Response) => {
