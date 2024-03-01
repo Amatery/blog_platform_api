@@ -14,39 +14,40 @@ import { devicesRouter } from './routes/devices-router';
 import { postsRouter } from './routes/posts-router';
 import { usersRouter } from './routes/users-router';
 
-const app = express()
-const port = settings.PORT
-const jsonBodyMiddleware = express.json()
-app.use(jsonBodyMiddleware)
-app.use(cookieParser())
+const app = express();
+const port = settings.PORT;
+const jsonBodyMiddleware = express.json();
+app.use(jsonBodyMiddleware);
+app.use(cookieParser());
+app.set('trust proxy', true);
 
 app.get('/', (req, res) => {
-  res.send('Welcome to blog platform API!')
-})
+  res.send('Welcome to blog platform API!');
+});
 
-app.use('/blogs', blogsRouter)
-app.use('/posts', postsRouter)
-app.use('/users', usersRouter)
-app.use('/auth', authorizationRouter)
-app.use('/comments', commentsRouter)
+app.use('/blogs', blogsRouter);
+app.use('/posts', postsRouter);
+app.use('/users', usersRouter);
+app.use('/auth', authorizationRouter);
+app.use('/comments', commentsRouter);
 app.use('/security', devicesRouter);
 
 /** ONLY FOR E2E TESTS **/
 app.delete('/testing/all-data', async (req: Request, res: Response) => {
-  await blogsService._deleteAllBlogs()
-  await postsService._deleteAllPosts()
-  await usersService._deleteAllUsers()
-  await commentsService._deleteAllComments()
-  res.sendStatus(STATUS_CODES.NO_CONTENT)
-})
+  await blogsService._deleteAllBlogs();
+  await postsService._deleteAllPosts();
+  await usersService._deleteAllUsers();
+  await commentsService._deleteAllComments();
+  res.sendStatus(STATUS_CODES.NO_CONTENT);
+});
 /**             **/
 
 const startServer = async () => {
-  await connectDB()
+  await connectDB();
   app.listen(port, () => {
-    console.log(`🚀🚀🚀🚀 App listening on ${port}`)
-  })
-}
+    console.log(`🚀🚀🚀🚀 App listening on ${port}`);
+  });
+};
 
 
-startServer().then(r => r)
+startServer().then(r => r);

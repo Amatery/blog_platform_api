@@ -4,6 +4,7 @@ import { BlogViewModel } from '../models/BlogModels/BlogViewModel';
 import { CommentViewModel } from '../models/CommentsModels/CommentViewModel';
 import { DeviceViewModel } from '../models/DeviceModels/DeviceViewModel';
 import { PostViewModel } from '../models/PostModels/PostViewModel';
+import { RateLimitViewModel } from '../models/RateLimitModels/RateLimitViewModel';
 import { UserDBViewModel } from '../models/UserModels/UserDBViewModel';
 
 
@@ -12,7 +13,8 @@ export const blogsCollection = client.db().collection<BlogViewModel>('blogs');
 export const postsCollection = client.db().collection<PostViewModel>('posts');
 export const usersCollection = client.db().collection<UserDBViewModel>('users');
 export const commentsCollection = client.db().collection<CommentViewModel>('comments');
-export const DevicesCollection = client.db().collection<DeviceViewModel>('devices');
+export const devicesCollection = client.db().collection<DeviceViewModel>('devices');
+export const rateLimitCollection = client.db().collection<RateLimitViewModel>('rateLimit');
 
 export const connectDB = async () => {
   try {

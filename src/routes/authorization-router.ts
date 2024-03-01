@@ -13,6 +13,7 @@ import {
 } from '../middlewares/credentials-validation-middleware';
 import { inputValidationMiddleware } from '../middlewares/input-validation-middleware';
 import { validateLoginOrEmail, validatePassword } from '../middlewares/login-body-validators';
+import { rateLimitMiddleware } from '../middlewares/rate-limit-middleware';
 import { validateEmail, validateLogin } from '../middlewares/users-body-validators';
 import { AccessTokenInputModel } from '../models/AuthorizationModels/AccessTokenInputModel';
 import { LoginInputModel } from '../models/AuthorizationModels/LoginInputModel';
@@ -44,6 +45,7 @@ authorizationRouter.post(
       return;
     }
     res.sendStatus(STATUS_CODES.NO_CONTENT);
+    return;
   },
 );
 authorizationRouter.post(
@@ -58,6 +60,7 @@ authorizationRouter.post(
       return;
     }
     res.sendStatus(STATUS_CODES.NO_CONTENT);
+    return;
   },
 );
 authorizationRouter.post(
@@ -72,10 +75,12 @@ authorizationRouter.post(
       return;
     }
     res.sendStatus(STATUS_CODES.NO_CONTENT);
+    return;
   },
 );
 authorizationRouter.post(
   '/login',
+  rateLimitMiddleware,
   validateLoginOrEmail,
   validatePassword,
   inputValidationMiddleware,
@@ -128,6 +133,7 @@ authorizationRouter.post('/logout', validateRefreshToken, async (req: Request, r
   await DevicesService.deleteDeviceById(deviceId);
   res.clearCookie('refreshToken', refreshTokenOptions);
   res.sendStatus(STATUS_CODES.NO_CONTENT);
+  return;
 });
 
 authorizationRouter.get('/me', authMiddleware, async (req: Request, res: Response<UserAuthMeViewModel>) => {
