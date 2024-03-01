@@ -1,12 +1,12 @@
-import { DeleteResult, ObjectId } from 'mongodb'
-import { PaginationUserModel } from '../models/UserModels/PaginationUserModel'
-import { UserAuthMeViewModel } from '../models/UserModels/UserAuthMeViewModel'
-import { UserDBViewModel } from '../models/UserModels/UserDBViewModel'
-import { UserViewModel } from '../models/UserModels/UserViewModel'
-import { usersRepository } from '../repositories/users-repository'
-import { v4 as uuidv4 } from 'uuid'
-import bcrypt from 'bcrypt'
-import { add } from 'date-fns'
+import bcrypt from 'bcrypt';
+import { add } from 'date-fns';
+import { DeleteResult, ObjectId } from 'mongodb';
+import { v4 as uuidv4 } from 'uuid';
+import { PaginationUserModel } from '../models/UserModels/PaginationUserModel';
+import { UserAuthMeViewModel } from '../models/UserModels/UserAuthMeViewModel';
+import { UserDBViewModel } from '../models/UserModels/UserDBViewModel';
+import { UserViewModel } from '../models/UserModels/UserViewModel';
+import { usersRepository } from '../repositories/users-repository';
 
 export const usersService = {
   async getUsers(

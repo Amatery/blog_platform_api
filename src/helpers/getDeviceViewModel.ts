@@ -1,11 +1,10 @@
-import { WithId } from 'mongodb';
 import { DeviceViewModel } from '../models/DeviceModels/DeviceViewModel';
 
-export const getDeviceViewModel = ((device: WithId<DeviceViewModel>): DeviceViewModel => {
+export const getDeviceViewModel = ((device: DeviceViewModel): DeviceViewModel => {
   return {
     ip: device.ip,
     title: device.title,
-    lastActivateDate: device.lastActivateDate,
+    lastActiveDate: device.lastActiveDate,
     deviceId: device.deviceId,
   };
 });

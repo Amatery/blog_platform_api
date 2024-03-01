@@ -1,4 +1,4 @@
-import { CommentViewModel } from '../models/CommentsModels/CommentViewModel'
+import { CommentViewModel } from '../models/CommentsModels/CommentViewModel';
 
 export const getCommentPaginationModel = (
   pageSize: number,
@@ -7,7 +7,6 @@ export const getCommentPaginationModel = (
   totalCount: number,
   comments: CommentViewModel[],
 ) => {
-  console.log('comments', comments)
   return {
     page,
     pagesCount,

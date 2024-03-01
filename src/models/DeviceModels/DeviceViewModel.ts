@@ -1,6 +1,7 @@
 export type DeviceViewModel = {
   ip: string,
   title: string,
-  lastActivateDate: string,
+  lastActiveDate: Date,
   deviceId: string,
+  expiresIn?: Date,
 }

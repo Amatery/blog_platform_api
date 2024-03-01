@@ -1,11 +1,11 @@
-import bcrypt from 'bcrypt'
-import { add } from 'date-fns'
-import { SentMessageInfo } from 'nodemailer'
-import { v4 as uuidv4 } from 'uuid'
-import { emailManager } from '../managers/email-manager'
-import { UserDBViewModel } from '../models/UserModels/UserDBViewModel'
-import { usersRepository } from '../repositories/users-repository'
-import { usersService } from './users-service'
+import bcrypt from 'bcrypt';
+import { add } from 'date-fns';
+import { SentMessageInfo } from 'nodemailer';
+import { v4 as uuidv4 } from 'uuid';
+import { emailManager } from '../managers/email-manager';
+import { UserDBViewModel } from '../models/UserModels/UserDBViewModel';
+import { usersRepository } from '../repositories/users-repository';
+import { usersService } from './users-service';
 
 export const authorizationService = {
   async authorize(loginOrEmail: string, password: string): Promise<UserDBViewModel | null> {

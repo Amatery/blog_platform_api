@@ -4,7 +4,6 @@ import { BlogViewModel } from '../models/BlogModels/BlogViewModel';
 import { CommentViewModel } from '../models/CommentsModels/CommentViewModel';
 import { DeviceViewModel } from '../models/DeviceModels/DeviceViewModel';
 import { PostViewModel } from '../models/PostModels/PostViewModel';
-import { UsedRefreshTokenModel } from '../models/UsedRefreshTokenModels/UsedRefreshTokenModel';
 import { UserDBViewModel } from '../models/UserModels/UserDBViewModel';
 
 
@@ -14,7 +13,6 @@ export const postsCollection = client.db().collection<PostViewModel>('posts');
 export const usersCollection = client.db().collection<UserDBViewModel>('users');
 export const commentsCollection = client.db().collection<CommentViewModel>('comments');
 export const DevicesCollection = client.db().collection<DeviceViewModel>('devices');
-export const usedRefreshTokensCollection = client.db().collection<UsedRefreshTokenModel>('usedRefreshTokens');
 
 export const connectDB = async () => {
   try {

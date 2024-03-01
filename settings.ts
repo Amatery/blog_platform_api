@@ -1,5 +1,4 @@
-import { add } from 'date-fns'
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 
 dotenv.config()
 
@@ -18,7 +17,8 @@ export const settings = {
 export const refreshTokenOptions = {
   httpOnly: true,
   secure: true,
-  expires: add(new Date(), {
-    seconds: 20,
-  }),
+  // expires: add(new Date(), {
+  //   minutes: 60,
+  //   seconds: 20,
+  // }),
 }
