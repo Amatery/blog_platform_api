@@ -117,16 +117,16 @@ authorizationRouter.post(
       deviceId,
     } = req.user!;
     const user = await usersService._getUserDBModel(userId);
-    const accessToken = await jwtService.createJWTAccessToken(user!);
-    const refreshToken = await jwtService.createRefreshToken(user!, deviceId);
-    const updatedDevice = await devicesService.updateDeviceById(refreshToken);
+    const newAccessToken = await jwtService.createJWTAccessToken(user!);
+    const newRefreshToken = await jwtService.createRefreshToken(user!, deviceId);
+    const updatedDevice = await devicesService.updateDeviceById(newRefreshToken);
     if (!updatedDevice) {
       res.sendStatus(STATUS_CODES.NOT_FOUND);
       return;
     }
-    res.cookie('refreshToken', refreshToken, refreshTokenOptions)
-      .status(STATUS_CODES.OK)
-      .send(accessToken);
+    res.status(STATUS_CODES.OK)
+      .cookie('refreshToken', newRefreshToken, refreshTokenOptions)
+      .json(newAccessToken);
   },
 );
 
