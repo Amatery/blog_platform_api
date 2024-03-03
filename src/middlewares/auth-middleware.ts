@@ -35,7 +35,7 @@ export const validateRefreshToken = async (req: Request, res: Response, next: Ne
 
   const decodedToken = await jwtService.verifyRefreshToken(refreshToken);
   if (!decodedToken) {
-    res.sendStatus(401);
+    res.sendStatus(STATUS_CODES.UNAUTHORIZED);
     return;
   }
   const device = await devicesService.getDeviceByIdAndActiveDate(decodedToken.lastActivateDate, decodedToken.deviceId);

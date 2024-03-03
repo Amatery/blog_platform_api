@@ -125,9 +125,8 @@ authorizationRouter.post(
       return;
     }
     res.status(STATUS_CODES.OK)
-      .clearCookie('refreshToken', refreshTokenOptions)
       .cookie('refreshToken', refreshToken, refreshTokenOptions)
-      .send(accessToken);
+      .json(accessToken);
   },
 );
 
