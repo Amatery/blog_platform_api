@@ -40,12 +40,11 @@ export const validateRefreshToken = async (req: Request, res: Response, next: Ne
     return;
   }
   const device = await devicesService.getDeviceByIdAndActiveDate(decodedToken.lastActivateDate, decodedToken.deviceId);
-  const userId = await jwtService.getUserIdByToken(refreshToken, settings.REFRESH_TOKEN_SECRET);
-  if (!userId || !device) {
+  if (device === null) {
     res.sendStatus(STATUS_CODES.UNAUTHORIZED);
     return;
   }
-  req.user = await usersService._getUserByMongoId(userId);
+  req.user = decodedToken.userId;
   req.deviceId = decodedToken.deviceId;
-  next();
+  return next();
 };

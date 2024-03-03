@@ -6,7 +6,7 @@ import { UserDBViewModel } from '../models/UserModels/UserDBViewModel';
 
 export const jwtService = {
   async createJWT(user: UserDBViewModel): Promise<string> {
-    return jwt.sign({ userId: user._id }, settings.JWT_SECRET, { expiresIn: '1h' });
+    return jwt.sign({ userId: user.id }, settings.JWT_SECRET, { expiresIn: '1h' });
   },
   async getUserIdByToken(token: string, secret: string): Promise<ObjectId | null> {
     try {
@@ -19,7 +19,7 @@ export const jwtService = {
   async createRefreshToken(user: UserDBViewModel, deviceId: string = crypto.randomUUID()): Promise<any> {
     const currentDate = new Date();
     return jwt.sign({
-      userId: user._id,
+      userId: user.id,
       lastActiveDate: currentDate,
       expireDate: new Date(currentDate.getTime() + 20 * 1000),
       deviceId: deviceId,
