@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { rateLimitService } from '../domain/rate-limit-service';
+import { STATUS_CODES } from '../helpers/StatusCodes';
 
 export const rateLimitMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   const currentDate = new Date();
@@ -7,7 +8,7 @@ export const rateLimitMiddleware = async (req: Request, res: Response, next: Nex
   const clientIp = req.ip;
   const count = await rateLimitService.countDocuments(clientIp, req.originalUrl, tenSecondsAgo);
   if (count >= 5) {
-    res.sendStatus(429);
+    res.sendStatus(STATUS_CODES.TOO_MANY_REQUESTS);
     return;
   } else {
     await rateLimitService.createDocument(clientIp, req.originalUrl, currentDate);

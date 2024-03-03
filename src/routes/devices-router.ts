@@ -1,4 +1,5 @@
 import { Request, Response, Router } from 'express';
+import { DeleteResult } from 'mongodb';
 import { devicesService } from '../domain/devices-service';
 import { STATUS_CODES } from '../helpers/StatusCodes';
 import { validateRefreshToken } from '../middlewares/auth-middleware';
@@ -14,7 +15,7 @@ devicesRouter.get('/devices', validateRefreshToken, async (req: Request, res: Re
   },
 );
 
-devicesRouter.delete('/devices', validateRefreshToken, async (req: Request, res: Response) => {
+devicesRouter.delete('/devices', validateRefreshToken, async (req: Request, res: Response<DeleteResult>) => {
   const result = await devicesService.deleteDevices();
   if (result) {
     res.sendStatus(STATUS_CODES.NO_CONTENT);
@@ -25,10 +26,10 @@ devicesRouter.delete('/devices', validateRefreshToken, async (req: Request, res:
 devicesRouter.delete(
   '/devices/:id',
   validateRefreshToken,
-  async (req: RequestWithParams<{ id: string }>, res: Response) => {
-    const { id } = req.params;
+  async (req: RequestWithParams<{ deviceId: string }>, res: Response<DeleteResult>) => {
+    const { deviceId } = req.params;
     const currentUserId = req.user?.userId;
-    const device = await devicesService.getDeviceById(id);
+    const device = await devicesService.getDeviceById(deviceId);
     if (!device) {
       res.sendStatus(STATUS_CODES.NOT_FOUND);
       return;
@@ -37,7 +38,7 @@ devicesRouter.delete(
       res.sendStatus(STATUS_CODES.FORBIDDEN);
       return;
     }
-    const deletedDevice = await devicesService.deleteDeviceById(id);
+    const deletedDevice = await devicesService.deleteDeviceById(deviceId);
     if (!deletedDevice) {
       res.sendStatus(STATUS_CODES.NOT_FOUND);
       return;

@@ -111,7 +111,7 @@ authorizationRouter.post(
 authorizationRouter.post(
   '/refresh-token',
   validateRefreshToken,
-  async (req: RequestWithBody<AccessTokenInputModel>, res: Response) => {
+  async (req: RequestWithBody<AccessTokenInputModel>, res: Response<{ accessToken: string }>) => {
     const {
       userId,
       deviceId,

@@ -28,8 +28,8 @@ export const devicesRepository = {
     const deletedDevices = await devicesCollection.deleteMany({});
     return deletedDevices.deletedCount > 0;
   },
-  async deleteDeviceById(id: string): Promise<boolean> {
-    const deletedDevice = await devicesCollection.deleteOne({ id });
+  async deleteDeviceById(deviceId: string): Promise<boolean> {
+    const deletedDevice = await devicesCollection.deleteOne({ deviceId });
     return deletedDevice.deletedCount === 1;
   },
   async updateDeviceById(deviceId: string, lastActiveDate: Date, expireDate: Date): Promise<boolean> {

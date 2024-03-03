@@ -34,8 +34,8 @@ export const devicesService = {
   async deleteDevices(): Promise<boolean> {
     return devicesRepository.deleteDevices();
   },
-  async deleteDeviceById(id: string): Promise<boolean> {
-    return devicesRepository.deleteDeviceById(id);
+  async deleteDeviceById(deviceId: string): Promise<boolean> {
+    return devicesRepository.deleteDeviceById(deviceId);
   },
   async updateDeviceById(token: string): Promise<boolean> {
     const {
