@@ -13,6 +13,7 @@ export const jwtService = {
   async getUserIdByToken(token: string, secret: string): Promise<string | null> {
     try {
       const result: any = jwt.verify(token, secret);
+      console.log('result', result);
       return result.userId;
     } catch (e) {
       return null;
