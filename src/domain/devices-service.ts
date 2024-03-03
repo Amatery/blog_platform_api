@@ -1,5 +1,6 @@
 import { DeleteResult } from 'mongodb';
 import { jwtService } from '../application/jwt-service';
+import { DeviceDBViewModel } from '../models/DeviceModels/DeviceDBViewModel';
 import { DeviceViewModel } from '../models/DeviceModels/DeviceViewModel';
 import { devicesRepository } from '../repositories/devices-repository';
 
@@ -26,6 +27,9 @@ export const devicesService = {
   },
   async getDeviceByIdAndActiveDate(lastActivateDate: Date, deviceId: string): Promise<DeviceViewModel | null> {
     return devicesRepository.getDeviceByIdAndActiveDate(lastActivateDate, deviceId);
+  },
+  async getDeviceById(deviceId: string): Promise<DeviceDBViewModel | null> {
+    return devicesRepository.getDeviceById(deviceId);
   },
   async deleteDevices(): Promise<boolean> {
     return devicesRepository.deleteDevices();

@@ -1,10 +1,11 @@
 import { DeleteResult } from 'mongodb';
 import { devicesCollection } from '../database/database-config';
-import { getDeviceViewModel } from '../helpers/getDeviceViewModel';
+import { getDeviceDBViewModel, getDeviceViewModel } from '../helpers/getDeviceViewModel';
+import { DeviceDBViewModel } from '../models/DeviceModels/DeviceDBViewModel';
 import { DeviceViewModel } from '../models/DeviceModels/DeviceViewModel';
 
 export const devicesRepository = {
-  async createDevice(device: DeviceViewModel): Promise<DeviceViewModel> {
+  async createDevice(device: DeviceDBViewModel): Promise<DeviceViewModel> {
     await devicesCollection.insertOne(device);
     return getDeviceViewModel(device);
   },
@@ -18,6 +19,10 @@ export const devicesRepository = {
       lastActivateDate,
     });
     return foundDevice !== null ? getDeviceViewModel(foundDevice) : null;
+  },
+  async getDeviceById(deviceId: string): Promise<DeviceDBViewModel | null> {
+    const foundDevice = await devicesCollection.findOne({ deviceId });
+    return foundDevice !== null ? getDeviceDBViewModel(foundDevice) : null;
   },
   async deleteDevices(): Promise<boolean> {
     const deletedDevices = await devicesCollection.deleteMany({});
