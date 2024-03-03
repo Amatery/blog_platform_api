@@ -5,7 +5,7 @@ import { UserDBViewModel } from '../models/UserModels/UserDBViewModel';
 
 export const jwtService = {
   async createJWTAccessToken(user: UserDBViewModel): Promise<{ accessToken: string }> {
-    const token = jwt.sign({ userId: user.id }, settings.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ userId: user.id }, settings.JWT_SECRET, { expiresIn: 10 });
     return {
       accessToken: token,
     };
@@ -25,7 +25,7 @@ export const jwtService = {
       lastActiveDate: currentDate,
       expireDate: new Date(currentDate.getTime() + 20 * 1000),
       deviceId: deviceId,
-    }, settings.REFRESH_TOKEN_SECRET, { expiresIn: '1h' });
+    }, settings.REFRESH_TOKEN_SECRET, { expiresIn: 20 });
   },
   async verifyRefreshToken(token: string) {
     try {
