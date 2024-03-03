@@ -1,7 +1,9 @@
 import * as crypto from 'crypto';
 import jwt from 'jsonwebtoken';
+import { InsertOneResult } from 'mongodb';
 import { settings } from '../../settings';
 import { UserDBViewModel } from '../models/UserModels/UserDBViewModel';
+import { expiredTokensRepository } from '../repositories/expired-tokens-repository';
 
 export const jwtService = {
   async createJWTAccessToken(user: UserDBViewModel): Promise<{ accessToken: string }> {
@@ -13,7 +15,6 @@ export const jwtService = {
   async getUserIdByToken(token: string, secret: string): Promise<string | null> {
     try {
       const result: any = jwt.verify(token, secret);
-      console.log('result', result);
       return result.userId;
     } catch (e) {
       return null;
@@ -35,5 +36,11 @@ export const jwtService = {
     } catch (e) {
       return false;
     }
+  },
+  async createExpiredToken(token: string): Promise<InsertOneResult> {
+    return expiredTokensRepository.createExpiredToken(token);
+  },
+  async isTokenExpired(token: string): Promise<string | null> {
+    return expiredTokensRepository.getExpiredToken(token);
   },
 };

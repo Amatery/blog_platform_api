@@ -32,12 +32,19 @@ export const validateRefreshToken = async (req: Request, res: Response, next: Ne
     res.sendStatus(STATUS_CODES.UNAUTHORIZED);
     return;
   }
-
   const decodedToken = await jwtService.verifyRefreshToken(refreshToken);
   if (!decodedToken) {
     res.sendStatus(STATUS_CODES.UNAUTHORIZED);
     return;
   }
+
+  const isTokenExpired = await jwtService.isTokenExpired(refreshToken);
+
+  if (isTokenExpired) {
+    res.sendStatus(STATUS_CODES.UNAUTHORIZED);
+    return;
+  }
+
   const device = await devicesService.getDeviceByIdAndActiveDate(decodedToken.lastActivateDate, decodedToken.deviceId);
   if (!device) {
     res.sendStatus(STATUS_CODES.UNAUTHORIZED);

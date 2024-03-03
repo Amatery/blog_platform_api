@@ -116,6 +116,8 @@ authorizationRouter.post(
       userId,
       deviceId,
     } = req.user!;
+    const currentRefreshToken = req.cookies.refreshToken;
+    await jwtService.createExpiredToken(currentRefreshToken);
     const user = await usersService._getUserDBModel(userId);
     const accessToken = await jwtService.createJWTAccessToken(user!);
     const refreshToken = await jwtService.createRefreshToken(user!, deviceId);
@@ -132,6 +134,8 @@ authorizationRouter.post(
 
 authorizationRouter.post('/logout', validateRefreshToken, async (req: Request, res: Response) => {
   const { deviceId } = req.user!;
+  const { refreshToken } = req.cookies;
+  await jwtService.createExpiredToken(refreshToken);
   await devicesService.deleteDeviceById(deviceId!);
   res.clearCookie('refreshToken', refreshTokenOptions);
   res.sendStatus(STATUS_CODES.NO_CONTENT);

@@ -15,6 +15,7 @@ export const usersCollection = client.db().collection<UserDBViewModel>('users');
 export const commentsCollection = client.db().collection<CommentViewModel>('comments');
 export const devicesCollection = client.db().collection<DeviceDBViewModel>('devices');
 export const rateLimitCollection = client.db().collection<RateLimitViewModel>('rateLimit');
+export const expiredTokensCollection = client.db().collection<any>('expiredTokens');
 
 export const connectDB = async () => {
   try {
