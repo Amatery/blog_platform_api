@@ -31,8 +31,8 @@ export const devicesService = {
   async getDeviceById(deviceId: string): Promise<DeviceDBViewModel | null> {
     return devicesRepository.getDeviceById(deviceId);
   },
-  async deleteDevices(): Promise<boolean> {
-    return devicesRepository.deleteDevices();
+  async deleteDevices(deviceId: string): Promise<boolean> {
+    return devicesRepository.deleteDevices(deviceId);
   },
   async deleteDeviceById(deviceId: string): Promise<boolean> {
     return devicesRepository.deleteDeviceById(deviceId);

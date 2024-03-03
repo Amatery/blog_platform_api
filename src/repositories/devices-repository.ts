@@ -24,8 +24,8 @@ export const devicesRepository = {
     const foundDevice = await devicesCollection.findOne({ deviceId });
     return foundDevice !== null ? getDeviceDBViewModel(foundDevice) : null;
   },
-  async deleteDevices(): Promise<boolean> {
-    const deletedDevices = await devicesCollection.deleteMany({});
+  async deleteDevices(deviceId: string): Promise<boolean> {
+    const deletedDevices = await devicesCollection.deleteMany({ deviceId: { $ne: deviceId } });
     return deletedDevices.deletedCount > 0;
   },
   async deleteDeviceById(deviceId: string): Promise<boolean> {
@@ -42,7 +42,6 @@ export const devicesRepository = {
       {
         $set: {
           lastActiveDate,
-          expireDate,
         },
       },
     );

@@ -16,7 +16,8 @@ devicesRouter.get('/devices', validateRefreshToken, async (req: Request, res: Re
 );
 
 devicesRouter.delete('/devices', validateRefreshToken, async (req: Request, res: Response<DeleteResult>) => {
-  const result = await devicesService.deleteDevices();
+  const { deviceId } = req.user!;
+  const result = await devicesService.deleteDevices(deviceId!);
   if (result) {
     res.sendStatus(STATUS_CODES.NO_CONTENT);
     return;
