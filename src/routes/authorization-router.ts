@@ -2,7 +2,7 @@ import { Request, Response, Router } from 'express';
 import { refreshTokenOptions } from '../../settings';
 import { jwtService } from '../application/jwt-service';
 import { authorizationService } from '../domain/authorization-service';
-import { DevicesService } from '../domain/devices-service';
+import { devicesService } from '../domain/devices-service';
 import { usersService } from '../domain/users-service';
 import { STATUS_CODES } from '../helpers/StatusCodes';
 import { authMiddleware, validateRefreshToken } from '../middlewares/auth-middleware';
@@ -103,7 +103,7 @@ authorizationRouter.post(
       accessToken: await jwtService.createJWT(user),
     };
     const refreshToken = await jwtService.createRefreshToken(user);
-    await DevicesService.createDevice(deviceIp, deviceTitle, refreshToken);
+    await devicesService.createDevice(deviceIp, deviceTitle, refreshToken);
     res.status(STATUS_CODES.OK)
       .cookie('refreshToken', refreshToken, refreshTokenOptions)
       .json(accessToken);
@@ -120,7 +120,7 @@ authorizationRouter.post(
       accessToken: await jwtService.createJWT(user!),
     };
     const newRefreshToken = await jwtService.createRefreshToken(user!, deviceId);
-    const updatedDevice = await DevicesService.updateDeviceById(newRefreshToken);
+    const updatedDevice = await devicesService.updateDeviceById(newRefreshToken);
     if (!updatedDevice) {
       res.sendStatus(STATUS_CODES.NOT_FOUND);
       return;
@@ -133,7 +133,7 @@ authorizationRouter.post(
 
 authorizationRouter.post('/logout', validateRefreshToken, async (req: Request, res: Response) => {
   const { deviceId } = req;
-  await DevicesService.deleteDeviceById(deviceId);
+  await devicesService.deleteDeviceById(deviceId);
   res.clearCookie('refreshToken', refreshTokenOptions);
   res.sendStatus(STATUS_CODES.NO_CONTENT);
   return;

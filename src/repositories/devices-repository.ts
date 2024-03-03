@@ -1,8 +1,9 @@
+import { DeleteResult } from 'mongodb';
 import { devicesCollection } from '../database/database-config';
 import { getDeviceViewModel } from '../helpers/getDeviceViewModel';
 import { DeviceViewModel } from '../models/DeviceModels/DeviceViewModel';
 
-export const DevicesRepository = {
+export const devicesRepository = {
   async createDevice(device: DeviceViewModel): Promise<DeviceViewModel> {
     await devicesCollection.insertOne(device);
     return getDeviceViewModel(device);
@@ -42,4 +43,11 @@ export const DevicesRepository = {
     );
     return updatedDevice.modifiedCount === 1;
   },
+  /**
+   * ONLY FOR E2E TESTS
+   */
+  async _deleteAllDevices(): Promise<DeleteResult> {
+    return devicesCollection.deleteMany({});
+  },
+  /**             **/
 };

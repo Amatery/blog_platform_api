@@ -1,8 +1,9 @@
+import { DeleteResult } from 'mongodb';
 import { jwtService } from '../application/jwt-service';
 import { DeviceViewModel } from '../models/DeviceModels/DeviceViewModel';
-import { DevicesRepository } from '../repositories/devices-repository';
+import { devicesRepository } from '../repositories/devices-repository';
 
-export const DevicesService = {
+export const devicesService = {
   async createDevice(deviceIp: string, deviceTitle: string, refreshToken: any): Promise<DeviceViewModel> {
     const {
       userId,
@@ -18,19 +19,19 @@ export const DevicesService = {
       ip: deviceIp,
       title: deviceTitle,
     };
-    return DevicesRepository.createDevice(newDevice);
+    return devicesRepository.createDevice(newDevice);
   },
   async getDevices(): Promise<DeviceViewModel[]> {
-    return DevicesRepository.getDevices();
+    return devicesRepository.getDevices();
   },
   async getDeviceByIdAndActiveDate(lastActivateDate: Date, deviceId: string): Promise<DeviceViewModel | null> {
-    return DevicesRepository.getDeviceByIdAndActiveDate(lastActivateDate, deviceId);
+    return devicesRepository.getDeviceByIdAndActiveDate(lastActivateDate, deviceId);
   },
   async deleteDevices(): Promise<boolean> {
-    return DevicesRepository.deleteDevices();
+    return devicesRepository.deleteDevices();
   },
   async deleteDeviceById(id: string): Promise<boolean> {
-    return DevicesRepository.deleteDeviceById(id);
+    return devicesRepository.deleteDeviceById(id);
   },
   async updateDeviceById(token: string): Promise<boolean> {
     const {
@@ -38,7 +39,14 @@ export const DevicesService = {
       lastActiveDate,
       expireDate,
     } = await jwtService.verifyRefreshToken(token);
-    return DevicesRepository.updateDeviceById(deviceId, lastActiveDate, expireDate);
+    return devicesRepository.updateDeviceById(deviceId, lastActiveDate, expireDate);
 
   },
+  /**
+   * ONLY FOR E2E TESTS
+   */
+  async _deleteAllDevices(): Promise<DeleteResult> {
+    return devicesRepository._deleteAllDevices();
+  },
+  /**             **/
 };

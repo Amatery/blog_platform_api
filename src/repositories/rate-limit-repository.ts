@@ -1,7 +1,8 @@
+import { DeleteResult } from 'mongodb';
 import { rateLimitCollection } from '../database/database-config';
 import { RateLimitViewModel } from '../models/RateLimitModels/RateLimitViewModel';
 
-export const RateLimitRepository = {
+export const rateLimitRepository = {
   async createDocument(document: RateLimitViewModel): Promise<any> {
     return rateLimitCollection.insertOne(document);
   },
@@ -11,8 +12,13 @@ export const RateLimitRepository = {
       URL: url,
       date: { $gte: tenSecondsAgo },
     };
-    const count = await rateLimitCollection.countDocuments(filter);
-    console.log('count', count);
-    return count;
+    return await rateLimitCollection.countDocuments(filter);
   },
+  /**
+   * ONLY FOR E2E TESTS
+   */
+  async _deleteAllSessions(): Promise<DeleteResult> {
+    return rateLimitCollection.deleteMany({});
+  },
+  /**             **/
 };

@@ -1,15 +1,23 @@
-import { RateLimitRepository } from '../repositories/rate-limit-repository';
+import { DeleteResult } from 'mongodb';
+import { rateLimitRepository } from '../repositories/rate-limit-repository';
 
-export const RateLimitService = {
+export const rateLimitService = {
   async createDocument(clientIp: string, url: string, tenSecondsAgo: Date): Promise<any> {
     const document = {
       IP: clientIp,
       URL: url,
       date: tenSecondsAgo,
     };
-    return RateLimitRepository.createDocument(document);
+    return rateLimitRepository.createDocument(document);
   },
   async countDocuments(clientIp: string, url: string, tenSecondsAgo: Date): Promise<number> {
-    return RateLimitRepository.countDocuments(clientIp, url, tenSecondsAgo);
+    return rateLimitRepository.countDocuments(clientIp, url, tenSecondsAgo);
   },
+  /**
+   * ONLY FOR E2E TESTS
+   */
+  async _deleteAllSessions(): Promise<DeleteResult> {
+    return rateLimitRepository._deleteAllSessions();
+  },
+  /**             **/
 };

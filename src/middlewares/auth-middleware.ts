@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { ObjectId } from 'mongodb';
 import { settings } from '../../settings';
 import { jwtService } from '../application/jwt-service';
-import { DevicesService } from '../domain/devices-service';
+import { devicesService } from '../domain/devices-service';
 import { usersService } from '../domain/users-service';
 import { STATUS_CODES } from '../helpers/StatusCodes';
 
@@ -39,7 +39,7 @@ export const validateRefreshToken = async (req: Request, res: Response, next: Ne
     res.sendStatus(401);
     return;
   }
-  const device = await DevicesService.getDeviceByIdAndActiveDate(decodedToken.lastActivateDate, decodedToken.deviceId);
+  const device = await devicesService.getDeviceByIdAndActiveDate(decodedToken.lastActivateDate, decodedToken.deviceId);
   const userId = await jwtService.getUserIdByToken(refreshToken, settings.REFRESH_TOKEN_SECRET);
   if (!userId || !device) {
     res.sendStatus(STATUS_CODES.UNAUTHORIZED);
