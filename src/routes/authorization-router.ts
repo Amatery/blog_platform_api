@@ -131,8 +131,8 @@ authorizationRouter.post(
 );
 
 authorizationRouter.post('/logout', validateRefreshToken, async (req: Request, res: Response) => {
-  const { deviceId } = req;
-  await devicesService.deleteDeviceById(deviceId);
+  const { deviceId } = req.user!;
+  await devicesService.deleteDeviceById(deviceId!);
   res.clearCookie('refreshToken', refreshTokenOptions);
   res.sendStatus(STATUS_CODES.NO_CONTENT);
   return;

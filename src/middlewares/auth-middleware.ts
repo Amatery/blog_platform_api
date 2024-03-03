@@ -43,6 +43,7 @@ export const validateRefreshToken = async (req: Request, res: Response, next: Ne
     res.sendStatus(STATUS_CODES.UNAUTHORIZED);
     return;
   }
+  // @ts-ignore
   req.user =
     {
       ...req.user,
