@@ -1,3 +1,4 @@
+import { isBefore } from 'date-fns';
 import { NextFunction, Request, Response } from 'express';
 import { settings } from '../../settings';
 import { jwtService } from '../application/jwt-service';
@@ -34,12 +35,21 @@ export const validateRefreshToken = async (req: Request, res: Response, next: Ne
   }
 
   const decodedToken = await jwtService.verifyRefreshToken(refreshToken);
+  console.log('decodedToken', decodedToken);
   if (!decodedToken) {
     res.sendStatus(401);
     return;
   }
   const device = await devicesService.getDeviceByIdAndActiveDate(decodedToken.lastActivateDate, decodedToken.deviceId);
   if (!device) {
+    res.sendStatus(STATUS_CODES.UNAUTHORIZED);
+    return;
+  }
+  if (decodedToken.iat !== device.lastActiveDate) {
+    res.sendStatus(STATUS_CODES.UNAUTHORIZED);
+    return;
+  }
+  if (isBefore(Date.now(), decodedToken.exp)) {
     res.sendStatus(STATUS_CODES.UNAUTHORIZED);
     return;
   }
