@@ -1,4 +1,4 @@
-import { DeleteResult, ObjectId } from 'mongodb';
+import { DeleteResult } from 'mongodb';
 import { usersCollection } from '../database/database-config';
 import { getUserAuthMeViewModel } from '../helpers/getUserAuthMeViewModel';
 import { getUserPaginationModel } from '../helpers/getUserPaginationModel';
@@ -54,8 +54,8 @@ export const usersRepository = {
     const foundUser = await usersCollection.findOne({ id })
     return foundUser === null ? null : getUserViewModel(foundUser)
   },
-  async _getUserByMongoId(id: ObjectId): Promise<UserAuthMeViewModel | null> {
-    const foundUser = await usersCollection.findOne(id)
+  async _getUserAuthModel(id: string): Promise<UserAuthMeViewModel | null> {
+    const foundUser = await usersCollection.findOne({ id });
     return foundUser === null ? null : getUserAuthMeViewModel(foundUser)
   },
   async _getUserDBModel(id: string): Promise<UserDBViewModel | null> {

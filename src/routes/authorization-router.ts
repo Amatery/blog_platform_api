@@ -99,9 +99,7 @@ authorizationRouter.post(
       res.sendStatus(STATUS_CODES.UNAUTHORIZED);
       return;
     }
-    const accessToken = {
-      accessToken: await jwtService.createJWT(user),
-    };
+    const accessToken = await jwtService.createJWTAccessToken(user);
     const refreshToken = await jwtService.createRefreshToken(user);
     await devicesService.createDevice(deviceIp, deviceTitle, refreshToken);
     res.status(STATUS_CODES.OK)
@@ -114,11 +112,12 @@ authorizationRouter.post(
   '/refresh-token',
   validateRefreshToken,
   async (req: RequestWithBody<AccessTokenInputModel>, res: Response) => {
-    const deviceId = req.deviceId;
-    const user = await usersService._getUserDBModel(req.user!.userId);
-    const newAccessToken = {
-      accessToken: await jwtService.createJWT(user!),
-    };
+    const {
+      userId,
+      deviceId,
+    } = req.user!;
+    const user = await usersService._getUserDBModel(userId);
+    const newAccessToken = await jwtService.createJWTAccessToken(user!);
     const newRefreshToken = await jwtService.createRefreshToken(user!, deviceId);
     const updatedDevice = await devicesService.updateDeviceById(newRefreshToken);
     if (!updatedDevice) {

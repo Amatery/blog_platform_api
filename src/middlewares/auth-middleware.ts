@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import { ObjectId } from 'mongodb';
 import { settings } from '../../settings';
 import { jwtService } from '../application/jwt-service';
 import { devicesService } from '../domain/devices-service';
@@ -13,9 +12,9 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     return;
   }
   const token = authorization.split(' ')[1];
-  const userId: ObjectId | null = await jwtService.getUserIdByToken(token, settings.JWT_SECRET);
+  const userId: string | null = await jwtService.getUserIdByToken(token, settings.JWT_SECRET);
   if (userId) {
-    req.user = await usersService._getUserByMongoId(userId);
+    req.user = await usersService._getUserAuthModel(userId);
     if (req.user === null) {
       res.sendStatus(STATUS_CODES.UNAUTHORIZED);
       return;
@@ -40,12 +39,15 @@ export const validateRefreshToken = async (req: Request, res: Response, next: Ne
     return;
   }
   const device = await devicesService.getDeviceByIdAndActiveDate(decodedToken.lastActivateDate, decodedToken.deviceId);
-  const userId = await jwtService.getUserIdByToken(refreshToken, settings.REFRESH_TOKEN_SECRET);
-  if (!userId || !device) {
+  if (!device) {
     res.sendStatus(STATUS_CODES.UNAUTHORIZED);
     return;
   }
-  req.user = await usersService._getUserByMongoId(userId);
-  req.deviceId = decodedToken.deviceId;
+  req.user =
+    {
+      ...req.user,
+      userId: decodedToken.userId,
+      deviceId: decodedToken.deviceId,
+    };
   next();
 };

@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { add } from 'date-fns';
-import { DeleteResult, ObjectId } from 'mongodb';
+import { DeleteResult } from 'mongodb';
 import { v4 as uuidv4 } from 'uuid';
 import { PaginationUserModel } from '../models/UserModels/PaginationUserModel';
 import { UserAuthMeViewModel } from '../models/UserModels/UserAuthMeViewModel';
@@ -29,8 +29,8 @@ export const usersService = {
   async getUserById(id: string): Promise<UserViewModel | null> {
     return usersRepository.getUserById(id)
   },
-  async _getUserByMongoId(id: ObjectId): Promise<UserAuthMeViewModel | null> {
-    return usersRepository._getUserByMongoId(id)
+  async _getUserAuthModel(id: string): Promise<UserAuthMeViewModel | null> {
+    return usersRepository._getUserAuthModel(id);
   },
   async _getUserDBModel(id: string): Promise<UserDBViewModel | null> {
     return usersRepository._getUserDBModel(id)

@@ -1,17 +1,19 @@
 import * as crypto from 'crypto';
 import jwt from 'jsonwebtoken';
-import { ObjectId } from 'mongodb';
 import { settings } from '../../settings';
 import { UserDBViewModel } from '../models/UserModels/UserDBViewModel';
 
 export const jwtService = {
-  async createJWT(user: UserDBViewModel): Promise<string> {
-    return jwt.sign({ userId: user._id }, settings.JWT_SECRET, { expiresIn: '1h' });
+  async createJWTAccessToken(user: UserDBViewModel): Promise<{ accessToken: string }> {
+    const token = jwt.sign({ userId: user.id }, settings.JWT_SECRET, { expiresIn: '1h' });
+    return {
+      accessToken: token,
+    };
   },
-  async getUserIdByToken(token: string, secret: string): Promise<ObjectId | null> {
+  async getUserIdByToken(token: string, secret: string): Promise<string | null> {
     try {
       const result: any = jwt.verify(token, secret);
-      return new ObjectId(result.userId)
+      return result.userId;
     } catch (e) {
       return null;
     }
@@ -19,7 +21,7 @@ export const jwtService = {
   async createRefreshToken(user: UserDBViewModel, deviceId: string = crypto.randomUUID()): Promise<any> {
     const currentDate = new Date();
     return jwt.sign({
-      userId: user._id,
+      userId: user.id,
       lastActiveDate: currentDate,
       expireDate: new Date(currentDate.getTime() + 20 * 1000),
       deviceId: deviceId,
