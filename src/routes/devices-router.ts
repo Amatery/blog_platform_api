@@ -24,10 +24,11 @@ devicesRouter.delete('/devices', validateRefreshToken, async (req: Request, res:
 });
 
 devicesRouter.delete(
-  '/devices/:id',
+  '/devices/:deviceId',
   validateRefreshToken,
   async (req: RequestWithParams<{ deviceId: string }>, res: Response<DeleteResult>) => {
     const { deviceId } = req.params;
+    console.log('deviceId', deviceId);
     const currentUserId = req.user?.userId;
     const device = await devicesService.getDeviceById(deviceId);
     if (!device) {
