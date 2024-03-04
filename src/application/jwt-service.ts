@@ -1,4 +1,3 @@
-import * as crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { InsertOneResult } from 'mongodb';
 import { settings } from '../../settings';
@@ -20,13 +19,13 @@ export const jwtService = {
       return null;
     }
   },
-  async createRefreshToken(user: UserDBViewModel, deviceId: string = crypto.randomUUID()): Promise<any> {
+  async createRefreshToken(user: UserDBViewModel, deviceId: string): Promise<any> {
     const currentDate = new Date();
     return jwt.sign({
       userId: user.id,
       lastActiveDate: currentDate,
       expireDate: new Date(currentDate.getTime() + 20 * 1000),
-      deviceId: deviceId,
+      deviceId,
     }, settings.REFRESH_TOKEN_SECRET, { expiresIn: '1h' });
   },
   async verifyRefreshToken(token: string) {
