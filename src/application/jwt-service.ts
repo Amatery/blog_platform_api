@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { InsertOneResult } from 'mongodb';
+import { randomUUID } from 'node:crypto';
 import { settings } from '../../settings';
 import { UserDBViewModel } from '../models/UserModels/UserDBViewModel';
 import { expiredTokensRepository } from '../repositories/expired-tokens-repository';
@@ -19,7 +20,7 @@ export const jwtService = {
       return null;
     }
   },
-  async createRefreshToken(user: UserDBViewModel, deviceId: string): Promise<any> {
+  async createRefreshToken(user: UserDBViewModel, deviceId: string = randomUUID()): Promise<any> {
     const currentDate = new Date();
     return jwt.sign({
       userId: user.id,

@@ -42,6 +42,7 @@ export const devicesRepository = {
       {
         $set: {
           lastActiveDate,
+          expireDate,
         },
       },
     );
