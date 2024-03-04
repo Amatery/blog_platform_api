@@ -11,7 +11,7 @@ export const devicesRepository = {
   },
   async getDevices(): Promise<DeviceViewModel[]> {
     const devices = await devicesCollection.find({}).toArray();
-    return devices.map(d => getDeviceViewModel(d));
+    return devices.map(device => getDeviceViewModel(device));
   },
   async getDeviceByIdAndActiveDate(lastActivateDate: Date, deviceId: string): Promise<DeviceViewModel | null> {
     const foundDevice = await devicesCollection.findOne({
@@ -33,6 +33,7 @@ export const devicesRepository = {
     return deletedDevice.deletedCount === 1;
   },
   async updateDeviceById(deviceId: string, lastActiveDate: Date, expireDate: Date): Promise<boolean> {
+    console.log('updateDeviceById repository', 'deviceId:', deviceId);
     const foundDevice = await devicesCollection.findOne({ deviceId });
     if (!foundDevice) {
       return false;

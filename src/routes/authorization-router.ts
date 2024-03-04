@@ -116,6 +116,7 @@ authorizationRouter.post(
       userId,
       deviceId,
     } = req.user!;
+    console.log('deviceId in /refresh-token:', deviceId, 'userId:', userId);
     const currentRefreshToken = req.cookies.refreshToken;
     await jwtService.createExpiredToken(currentRefreshToken);
     const user = await usersService._getUserDBModel(userId);

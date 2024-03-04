@@ -22,6 +22,7 @@ export const jwtService = {
   },
   async createRefreshToken(user: UserDBViewModel, deviceId: string = randomUUID()): Promise<any> {
     const currentDate = new Date();
+    console.log('createRefreshToken - userId:', user.id, 'deviceId:', deviceId);
     return jwt.sign({
       userId: user.id,
       lastActiveDate: currentDate,

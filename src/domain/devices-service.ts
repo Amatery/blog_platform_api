@@ -20,6 +20,7 @@ export const devicesService = {
       ip: deviceIp,
       title: deviceTitle,
     };
+    console.log('createDeviceService', 'newDevice', newDevice);
     return devicesRepository.createDevice(newDevice);
   },
   async getDevices(): Promise<DeviceViewModel[]> {
