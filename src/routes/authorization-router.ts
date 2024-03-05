@@ -101,7 +101,11 @@ authorizationRouter.post(
     }
     const accessToken = await jwtService.createJWTAccessToken(user);
     const refreshToken = await jwtService.createRefreshToken(user);
-    await devicesService.createDevice(deviceIp, deviceTitle, refreshToken);
+    const createdDevice = await devicesService.createDevice(deviceIp, deviceTitle, refreshToken);
+    if (!createdDevice) {
+      res.sendStatus(STATUS_CODES.NOT_FOUND);
+      return;
+    }
     res.status(STATUS_CODES.OK)
       .cookie('refreshToken', refreshToken, refreshTokenOptions)
       .json(accessToken);

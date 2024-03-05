@@ -5,8 +5,12 @@ import { DeviceDBViewModel } from '../models/DeviceModels/DeviceDBViewModel';
 import { DeviceViewModel } from '../models/DeviceModels/DeviceViewModel';
 
 export const devicesRepository = {
-  async createDevice(device: DeviceDBViewModel): Promise<DeviceViewModel> {
+  async createDevice(device: DeviceDBViewModel): Promise<DeviceViewModel | null> {
     await devicesCollection.insertOne(device);
+    const createdDevice = await devicesCollection.findOne({ lastActiveDate: device.lastActiveDate });
+    if (!createdDevice) {
+      return null;
+    }
     return getDeviceViewModel(device);
   },
   async getDevices(): Promise<DeviceViewModel[]> {
@@ -15,13 +19,13 @@ export const devicesRepository = {
   },
   async getDeviceByIdAndActiveDate(lastActivateDate: Date, deviceId: string): Promise<DeviceViewModel | null> {
     const foundDevice = await devicesCollection.findOne({
-      deviceId,
-      lastActivateDate,
+      deviceId: deviceId,
+      lastActiveDate: lastActivateDate,
     });
     return foundDevice !== null ? getDeviceViewModel(foundDevice) : null;
   },
   async getDeviceById(deviceId: string): Promise<DeviceDBViewModel | null> {
-    const foundDevice = await devicesCollection.findOne({ deviceId });
+    const foundDevice = await devicesCollection.findOne({ deviceId: deviceId });
     return foundDevice !== null ? getDeviceDBViewModel(foundDevice) : null;
   },
   async deleteDevices(deviceId: string): Promise<boolean> {
@@ -34,12 +38,12 @@ export const devicesRepository = {
   },
   async updateDeviceById(deviceId: string, lastActiveDate: Date, expireDate: Date): Promise<boolean> {
     console.log('updateDeviceById repository', 'deviceId:', deviceId);
-    const foundDevice = await devicesCollection.findOne({ deviceId });
+    const foundDevice = await devicesCollection.findOne({ deviceId: deviceId });
     if (!foundDevice) {
       return false;
     }
     const updatedDevice = await devicesCollection.updateOne(
-      { deviceId },
+      { deviceId: deviceId },
       {
         $set: {
           lastActiveDate,
