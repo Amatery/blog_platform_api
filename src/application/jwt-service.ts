@@ -33,6 +33,7 @@ export const jwtService = {
   async verifyRefreshToken(token: string) {
     try {
       const result: any = jwt.verify(token, settings.REFRESH_TOKEN_SECRET);
+      console.log('result in verifyRefreshToken', result);
       return result;
     } catch (e) {
       return false;

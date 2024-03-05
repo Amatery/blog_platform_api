@@ -44,6 +44,7 @@ export const devicesService = {
       lastActiveDate,
       expireDate,
     } = await jwtService.verifyRefreshToken(token);
+    console.log('deviceId in updateDeviceId-service', deviceId);
     return devicesRepository.updateDeviceById(deviceId, lastActiveDate, expireDate);
 
   },
