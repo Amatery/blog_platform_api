@@ -5,7 +5,7 @@ import { DeviceViewModel } from '../models/DeviceModels/DeviceViewModel';
 import { devicesRepository } from '../repositories/devices-repository';
 
 export const devicesService = {
-  async createDevice(deviceIp: string, deviceTitle: string, refreshToken: any): Promise<DeviceViewModel | null> {
+  async createDevice(deviceIp: string, deviceTitle: string, refreshToken: any): Promise<DeviceViewModel> {
     const {
       userId,
       lastActiveDate,
