@@ -100,7 +100,7 @@ authorizationRouter.post(
       return;
     }
     const accessToken = await jwtService.createJWTAccessToken(user);
-    const refreshToken = await jwtService.createRefreshToken(user);
+    const refreshToken = await jwtService.createRefreshTokenWhileLogin(user);
     await devicesService.createDevice(deviceIp, deviceTitle, refreshToken);
     res.status(STATUS_CODES.OK)
       .cookie('refreshToken', refreshToken, refreshTokenOptions)
@@ -121,7 +121,7 @@ authorizationRouter.post(
     await jwtService.createExpiredToken(currentRefreshToken);
     const user = await usersService._getUserDBModel(userId);
     const accessToken = await jwtService.createJWTAccessToken(user!);
-    const refreshToken = await jwtService.createRefreshToken(user!, deviceId);
+    const refreshToken = await jwtService.createRefreshToken(user!, deviceId!);
     const updatedDevice = await devicesService.updateDeviceById(refreshToken);
     if (!updatedDevice) {
       res.sendStatus(STATUS_CODES.NOT_FOUND);

@@ -20,7 +20,7 @@ export const jwtService = {
       return null;
     }
   },
-  async createRefreshToken(user: UserDBViewModel, deviceId: string = randomUUID()): Promise<any> {
+  async createRefreshToken(user: UserDBViewModel, deviceId: string): Promise<any> {
     const currentDate = new Date();
     console.log('createRefreshToken - userId:', user.id, 'deviceId:', deviceId);
     return jwt.sign({
@@ -28,6 +28,16 @@ export const jwtService = {
       lastActiveDate: currentDate,
       expireDate: new Date(currentDate.getTime() + 20 * 1000),
       deviceId,
+    }, settings.REFRESH_TOKEN_SECRET, { expiresIn: '1h' });
+  },
+  async createRefreshTokenWhileLogin(user: UserDBViewModel): Promise<any> {
+    const currentDate = new Date();
+    console.log('createRefreshTokenWhileLogin - userId:', user.id);
+    return jwt.sign({
+      userId: user.id,
+      lastActiveDate: currentDate,
+      expireDate: new Date(currentDate.getTime() + 20 * 1000),
+      deviceId: randomUUID(),
     }, settings.REFRESH_TOKEN_SECRET, { expiresIn: '1h' });
   },
   async verifyRefreshToken(token: string) {
