@@ -33,7 +33,6 @@ export const devicesRepository = {
     return deletedDevice.deletedCount === 1;
   },
   async updateDeviceById(deviceId: string, lastActiveDate: Date, expireDate: Date): Promise<boolean> {
-    console.log('updateDeviceById repository', 'deviceId:', deviceId);
     const foundDevice = await devicesCollection.findOne({ deviceId });
     if (!foundDevice) {
       return false;

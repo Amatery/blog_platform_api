@@ -20,7 +20,6 @@ export const devicesService = {
       ip: deviceIp,
       title: deviceTitle,
     };
-    console.log('createDeviceService', 'newDevice', newDevice);
     return devicesRepository.createDevice(newDevice);
   },
   async getDevices(userId: string): Promise<DeviceViewModel[]> {
@@ -44,7 +43,6 @@ export const devicesService = {
       lastActiveDate,
       expireDate,
     } = await jwtService.verifyRefreshToken(token);
-    console.log('deviceId in updateDeviceId-service', deviceId);
     return devicesRepository.updateDeviceById(deviceId, lastActiveDate, expireDate);
 
   },
