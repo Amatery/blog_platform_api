@@ -1,5 +1,5 @@
 import { WithId } from 'mongodb';
-import mongoose from 'mongoose';
+import { model, Schema } from 'mongoose';
 import { BlogViewModel } from '../models/BlogModels/BlogViewModel';
 import { CommentViewModel } from '../models/CommentsModels/CommentViewModel';
 import { DeviceDBViewModel } from '../models/DeviceModels/DeviceDBViewModel';
@@ -8,7 +8,7 @@ import { PostViewModel } from '../models/PostModels/PostViewModel';
 import { RateLimitViewModel } from '../models/RateLimitModels/RateLimitViewModel';
 import { UserDBViewModel } from '../models/UserModels/UserDBViewModel';
 
-export const BlogSchema = new mongoose.Schema<WithId<BlogViewModel>>({
+export const BlogSchema = new Schema<WithId<BlogViewModel>>({
   id: { type: String, required: true },
   name: { type: String, required: true },
   description: { type: String, required: true },
@@ -16,7 +16,7 @@ export const BlogSchema = new mongoose.Schema<WithId<BlogViewModel>>({
   createdAt: { type: String, required: true },
 });
 
-export const PostSchema = new mongoose.Schema<WithId<PostViewModel>>({
+export const PostSchema = new Schema<WithId<PostViewModel>>({
   id: { type: String, required: true },
   shortDescription: { type: String, required: true },
   content: { type: String, required: true },
@@ -26,7 +26,7 @@ export const PostSchema = new mongoose.Schema<WithId<PostViewModel>>({
   title: { type: String, required: true },
 });
 
-export const CommentSchema = new mongoose.Schema<WithId<CommentViewModel>>({
+export const CommentSchema = new Schema<WithId<CommentViewModel>>({
   id: { type: String, required: true },
   postId: { type: String, required: true },
   content: { type: String, required: true },
@@ -37,7 +37,7 @@ export const CommentSchema = new mongoose.Schema<WithId<CommentViewModel>>({
   },
 });
 
-export const UserSchema = new mongoose.Schema<WithId<UserDBViewModel>>({
+export const UserSchema = new Schema<WithId<UserDBViewModel>>({
   id: { type: String, required: true },
   login: { type: String, required: true },
   email: { type: String, required: true },
@@ -51,7 +51,7 @@ export const UserSchema = new mongoose.Schema<WithId<UserDBViewModel>>({
   },
 });
 
-export const DeviceSchema = new mongoose.Schema<WithId<DeviceDBViewModel>>({
+export const DeviceSchema = new Schema<WithId<DeviceDBViewModel>>({
   deviceId: { type: String, required: true },
   userId: { type: String, required: true },
   lastActiveDate: { type: Date, required: true },
@@ -60,23 +60,23 @@ export const DeviceSchema = new mongoose.Schema<WithId<DeviceDBViewModel>>({
   title: { type: String, required: true },
 });
 
-export const RateLimitSchema = new mongoose.Schema<WithId<RateLimitViewModel>>({
+export const RateLimitSchema = new Schema<WithId<RateLimitViewModel>>({
   IP: { type: String, required: true },
   URL: { type: String, required: true },
   date: { type: Date, required: true },
 
 });
 
-export const ExpiredTokenSchema = new mongoose.Schema<WithId<ExpiredTokenViewModel>>({
+export const ExpiredTokenSchema = new Schema<WithId<ExpiredTokenViewModel>>({
   token: { type: String, required: true },
 });
 
-export const BlogModel = mongoose.model<WithId<BlogViewModel>>('blogs', BlogSchema);
-export const PostModel = mongoose.model<WithId<PostViewModel>>('posts', PostSchema);
-export const CommentModel = mongoose.model<WithId<CommentViewModel>>('comments', CommentSchema);
-export const UserModel = mongoose.model<WithId<UserDBViewModel>>('users', UserSchema);
-export const DeviceModel = mongoose.model<WithId<DeviceDBViewModel>>('devices', DeviceSchema);
-export const RateLimitModel = mongoose.model<WithId<RateLimitViewModel>>('rateLimit', RateLimitSchema);
-export const ExpiredTokenModel = mongoose.model<WithId<ExpiredTokenViewModel>>('expiredTokens', ExpiredTokenSchema);
+export const BlogModel = model<WithId<BlogViewModel>>('blogs', BlogSchema);
+export const PostModel = model<WithId<PostViewModel>>('posts', PostSchema);
+export const CommentModel = model<WithId<CommentViewModel>>('comments', CommentSchema);
+export const UserModel = model<WithId<UserDBViewModel>>('users', UserSchema);
+export const DeviceModel = model<WithId<DeviceDBViewModel>>('devices', DeviceSchema);
+export const RateLimitModel = model<WithId<RateLimitViewModel>>('rateLimit', RateLimitSchema);
+export const ExpiredTokenModel = model<WithId<ExpiredTokenViewModel>>('expiredTokens', ExpiredTokenSchema);
 
 
