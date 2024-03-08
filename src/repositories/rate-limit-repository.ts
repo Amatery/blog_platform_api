@@ -1,10 +1,10 @@
 import { DeleteResult } from 'mongodb';
-import { rateLimitCollection } from '../database/database-config';
+import { RateLimitModel } from '../database/schemas';
 import { RateLimitViewModel } from '../models/RateLimitModels/RateLimitViewModel';
 
 export const rateLimitRepository = {
   async createDocument(document: RateLimitViewModel): Promise<any> {
-    return rateLimitCollection.insertOne(document);
+    return RateLimitModel.create(document);
   },
   async countDocuments(clientIp: string, url: string, tenSecondsAgo: Date): Promise<number> {
     const filter = {
@@ -12,13 +12,13 @@ export const rateLimitRepository = {
       URL: url,
       date: { $gte: tenSecondsAgo },
     };
-    return await rateLimitCollection.countDocuments(filter);
+    return RateLimitModel.countDocuments(filter);
   },
   /**
    * ONLY FOR E2E TESTS
    */
   async _deleteAllSessions(): Promise<DeleteResult> {
-    return rateLimitCollection.deleteMany({});
+    return RateLimitModel.deleteMany({});
   },
   /**             **/
 };

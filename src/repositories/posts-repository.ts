@@ -1,15 +1,15 @@
-import { DeleteResult } from 'mongodb'
-import { v4 as uuidv4 } from 'uuid'
-import { blogsCollection, commentsCollection, postsCollection } from '../database/database-config'
-import { getCommentPaginationModel } from '../helpers/getCommentPaginationModel'
-import { getCommentViewModel } from '../helpers/getCommentViewModel'
-import { getPostPaginationModel } from '../helpers/getPostPaginationModel'
-import { getPostViewModel } from '../helpers/getPostViewModel'
-import { CommentViewModel } from '../models/CommentsModels/CommentViewModel'
-import { PaginationCommentModel } from '../models/CommentsModels/PaginationCommentModel'
-import { PaginationPostModel } from '../models/PostModels/PaginationPostModel'
-import { PostViewModel } from '../models/PostModels/PostViewModel'
-import { UserAuthMeViewModel } from '../models/UserModels/UserAuthMeViewModel'
+import { DeleteResult } from 'mongodb';
+import { v4 as uuidv4 } from 'uuid';
+import { BlogModel, CommentModel, PostModel } from '../database/schemas';
+import { getCommentPaginationModel } from '../helpers/getCommentPaginationModel';
+import { getCommentViewModel } from '../helpers/getCommentViewModel';
+import { getPostPaginationModel } from '../helpers/getPostPaginationModel';
+import { getPostViewModel } from '../helpers/getPostViewModel';
+import { CommentViewModel } from '../models/CommentsModels/CommentViewModel';
+import { PaginationCommentModel } from '../models/CommentsModels/PaginationCommentModel';
+import { PaginationPostModel } from '../models/PostModels/PaginationPostModel';
+import { PostViewModel } from '../models/PostModels/PostViewModel';
+import { UserAuthMeViewModel } from '../models/UserModels/UserAuthMeViewModel';
 
 
 export const postsRepository = {
@@ -19,18 +19,18 @@ export const postsRepository = {
     pageNumber: number,
     pageSize: number,
   ): Promise<PaginationPostModel> {
-    const totalCount = await postsCollection.countDocuments()
+    const totalCount = await PostModel.countDocuments();
     const pagesCount = Math.ceil(totalCount / pageSize)
-    const posts = await postsCollection
+    const posts = await PostModel
       .find({})
       .sort({ [sortBy]: sortDirection === 'desc' ? -1 : 1 })
       .skip(pageSize * (pageNumber - 1))
       .limit(pageSize)
-      .toArray()
+      .lean()
     return getPostPaginationModel(pageSize, pageNumber, pagesCount, totalCount, posts)
   },
   async getPostById(id: string): Promise<PostViewModel | null> {
-    const foundPost = await postsCollection.findOne({ id })
+    const foundPost = await PostModel.findOne({ id });
     if (foundPost === null) {
       return null
     } else {
@@ -43,7 +43,7 @@ export const postsRepository = {
     content: string,
     blogId: string,
   ): Promise<PostViewModel> {
-    const foundBlog = await blogsCollection.findOne({ id: blogId })
+    const foundBlog = await BlogModel.findOne({ id: blogId });
     const createdPost: PostViewModel = {
       id: uuidv4(),
       title,
@@ -53,7 +53,7 @@ export const postsRepository = {
       blogName: foundBlog?.name,
       createdAt: new Date().toISOString(),
     }
-    await postsCollection.insertOne(createdPost)
+    await PostModel.create(createdPost);
     return getPostViewModel(createdPost)
   },
   async updatePostById(
@@ -63,7 +63,7 @@ export const postsRepository = {
     content: string,
     blogId: string,
   ): Promise<boolean> {
-    const updatedPost = await postsCollection.updateOne(
+    const updatedPost = await PostModel.updateOne(
       { id },
       {
         $set: {
@@ -77,7 +77,7 @@ export const postsRepository = {
     return updatedPost.matchedCount === 1
   },
   async deletePostById(id: string): Promise<boolean> {
-    const foundPost = await postsCollection.deleteOne({ id })
+    const foundPost = await PostModel.deleteOne({ id });
     return foundPost.deletedCount === 1
   },
 
@@ -89,16 +89,16 @@ export const postsRepository = {
     pageNumber: number,
     pageSize: number,
   ): Promise<PaginationCommentModel | null> {
-    const foundPost = await postsCollection.findOne({ id })
+    const foundPost = await PostModel.findOne({ id });
     if (foundPost) {
-      const totalCount = await commentsCollection.countDocuments({ postId: id })
+      const totalCount = await CommentModel.countDocuments({ postId: id });
       const pagesCount = Math.ceil(totalCount / pageSize)
-      const comments = await commentsCollection
+      const comments = await CommentModel
         .find({ postId: id })
         .sort({ [sortBy]: sortDirection === 'desc' ? -1 : 1 })
         .skip(pageSize * (pageNumber - 1))
         .limit(pageSize)
-        .toArray()
+        .lean()
       return getCommentPaginationModel(pageSize, pageNumber, pagesCount, totalCount, comments)
     } else {
       return null
@@ -109,7 +109,7 @@ export const postsRepository = {
     content: string,
     user: UserAuthMeViewModel,
   ): Promise<CommentViewModel | null> {
-    const foundPost = await postsCollection.findOne({ id })
+    const foundPost = await PostModel.findOne({ id });
     if (foundPost) {
       const newComment = {
         commentatorInfo: {
@@ -121,7 +121,7 @@ export const postsRepository = {
         content,
         createdAt: new Date().toISOString(),
       }
-      await commentsCollection.insertOne(newComment)
+      await CommentModel.create(newComment);
       return getCommentViewModel(newComment)
     } else {
       return null
@@ -131,7 +131,7 @@ export const postsRepository = {
 
   /** ONLY FOR E2E TESTS **/
   async _deleteAllPosts(): Promise<DeleteResult> {
-    return postsCollection.deleteMany({})
+    return PostModel.deleteMany({});
   },
   /**             **/
 }

@@ -1,6 +1,7 @@
 import { WithId } from 'mongodb';
 import mongoose from 'mongoose';
 import { BlogViewModel } from '../models/BlogModels/BlogViewModel';
+import { CommentViewModel } from '../models/CommentsModels/CommentViewModel';
 import { DeviceDBViewModel } from '../models/DeviceModels/DeviceDBViewModel';
 import { ExpiredTokenViewModel } from '../models/ExpiredTokenModels/ExpiredTokenViewModel';
 import { PostViewModel } from '../models/PostModels/PostViewModel';
@@ -22,6 +23,18 @@ export const PostSchema = new mongoose.Schema<WithId<PostViewModel>>({
   blogId: { type: String, required: true },
   blogName: { type: String, required: true },
   createdAt: { type: String, required: true },
+  title: { type: String, required: true },
+});
+
+export const CommentSchema = new mongoose.Schema<WithId<CommentViewModel>>({
+  id: { type: String, required: true },
+  postId: { type: String, required: true },
+  content: { type: String, required: true },
+  createdAt: { type: String, required: true },
+  commentatorInfo: {
+    userId: { type: String, required: true },
+    userLogin: { type: String, required: true },
+  },
 });
 
 export const UserSchema = new mongoose.Schema<WithId<UserDBViewModel>>({
@@ -60,6 +73,7 @@ export const ExpiredTokenSchema = new mongoose.Schema<WithId<ExpiredTokenViewMod
 
 export const BlogModel = mongoose.model<WithId<BlogViewModel>>('blogs', BlogSchema);
 export const PostModel = mongoose.model<WithId<PostViewModel>>('posts', PostSchema);
+export const CommentModel = mongoose.model<WithId<CommentViewModel>>('comments', CommentSchema);
 export const UserModel = mongoose.model<WithId<UserDBViewModel>>('users', UserSchema);
 export const DeviceModel = mongoose.model<WithId<DeviceDBViewModel>>('devices', DeviceSchema);
 export const RateLimitModel = mongoose.model<WithId<RateLimitViewModel>>('rateLimit', RateLimitSchema);

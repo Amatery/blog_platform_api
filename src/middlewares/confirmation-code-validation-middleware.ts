@@ -1,12 +1,12 @@
-import { body } from 'express-validator'
-import { usersCollection } from '../database/database-config'
+import { body } from 'express-validator';
+import { UserModel } from '../database/schemas';
 
 export const confirmationCodeValidationMiddleware = body('code')
   .isString()
   .trim()
   .isLength({ min: 1 })
   .custom(async v => {
-    const foundUser = await usersCollection.findOne({ 'emailConfirmation.confirmationCode': v })
+    const foundUser = await UserModel.findOne({ 'emailConfirmation.confirmationCode': v });
     if (foundUser === null) {
       return Promise.reject('Invalid confirmation code')
     }

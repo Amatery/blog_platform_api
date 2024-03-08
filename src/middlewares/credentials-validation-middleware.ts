@@ -1,11 +1,11 @@
-import { body } from 'express-validator'
-import { usersCollection } from '../database/database-config'
+import { body } from 'express-validator';
+import { UserModel } from '../database/schemas';
 
 export const isEmailOrLoginAlreadyExist = body(['email', 'login'])
   .isString()
   .trim()
   .custom(async v => {
-    const foundUser = await usersCollection.findOne({ $or: [{ email: v }, { login: v }] })
+    const foundUser = await UserModel.findOne({ $or: [{ email: v }, { login: v }] });
     if (foundUser === null) {
       return true
     }
@@ -22,7 +22,7 @@ export const isEmailCorrectAndConfirmed = body('email')
   .trim()
   .matches('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$')
   .custom(async v => {
-    const foundUser = await usersCollection.findOne({ email: v })
+    const foundUser = await UserModel.findOne({ email: v });
     if (foundUser === null) {
       return Promise.reject('Email is incorrect')
     }

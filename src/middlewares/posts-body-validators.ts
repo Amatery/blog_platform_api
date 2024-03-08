@@ -1,5 +1,5 @@
-import { body } from 'express-validator'
-import { blogsCollection } from '../database/database-config'
+import { body } from 'express-validator';
+import { BlogModel } from '../database/schemas';
 
 export const validateTitle = body('title')
   .isString()
@@ -26,7 +26,7 @@ export const validateContent = body('content')
   })
 
 export const validateBlogId = body('blogId').isString().trim().isLength({ min: 1 }).custom(async v => {
-  const foundBlog = await blogsCollection.findOne({ id: v })
+  const foundBlog = await BlogModel.findOne({ id: v });
   if (!foundBlog) {
     return Promise.reject('BlogId does not exists')
   } else {

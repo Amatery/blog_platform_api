@@ -16,6 +16,7 @@ export const getCommentPaginationModel = (
       return {
         commentatorInfo: c.commentatorInfo,
         id: c.id,
+        postId: c.postId,
         content: c.content,
         createdAt: c.createdAt,
       }

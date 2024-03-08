@@ -1,4 +1,4 @@
-import { CommentatorInfoViewModel } from './CommentatorInfoViewModel'
+import { CommentatorInfoViewModel } from './CommentatorInfoViewModel';
 
 export type CommentViewModel = {
   /**
@@ -9,6 +9,7 @@ export type CommentViewModel = {
    */
   commentatorInfo: CommentatorInfoViewModel,
   id: string,
+  postId: string,
   content: string,
   createdAt: string
 }

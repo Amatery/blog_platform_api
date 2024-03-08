@@ -1,7 +1,6 @@
 import { DeleteResult } from 'mongodb';
 import { v4 as uuidv4 } from 'uuid';
-import { blogsCollection, postsCollection } from '../database/database-config';
-import { BlogModel } from '../database/schemas';
+import { BlogModel, PostModel } from '../database/schemas';
 import { getBlogPaginationModel } from '../helpers/getBlogPaginationModel';
 import { getBlogViewModel } from '../helpers/getBlogViewModel';
 import { getPostPaginationModel } from '../helpers/getPostPaginationModel';
@@ -29,7 +28,7 @@ export const blogsRepository = {
       .skip(pageSize * (pageNumber - 1))
       .limit(pageSize)
       .lean();
-    const totalDocuments = await blogsCollection.countDocuments({});
+    const totalDocuments = await BlogModel.countDocuments({});
     const totalItems = searchNameTerm !== null ? blogs.length : totalDocuments;
     const pagesCount = Math.ceil(totalItems / pageSize);
     return getBlogPaginationModel(pageSize, pageNumber, pagesCount, totalItems, blogs);
@@ -67,13 +66,13 @@ export const blogsRepository = {
     pageNumber: number,
     pageSize: number,
   ): Promise<PaginationPostModel | null> {
-    const totalCount = await postsCollection.countDocuments({ blogId });
+    const totalCount = await PostModel.countDocuments({ blogId });
     const pagesCount = Math.ceil(totalCount / pageSize);
-    const foundPosts = await postsCollection.find({ blogId })
+    const foundPosts = await PostModel.find({ blogId })
       .sort({ [sortBy]: sortDirection === 'desc' ? -1 : 1 })
       .skip(pageSize * (pageNumber - 1))
       .limit(pageSize)
-      .toArray();
+      .lean();
     return !foundPosts.length ?
       null :
       getPostPaginationModel(pageSize, pageNumber, pagesCount, totalCount, foundPosts);
@@ -96,7 +95,7 @@ export const blogsRepository = {
         blogName: foundBlog.name,
         createdAt: new Date().toISOString(),
       };
-      await postsCollection.insertOne(createdPost);
+      await PostModel.create(createdPost);
       return getPostViewModel(createdPost);
     } else {
       return null;
