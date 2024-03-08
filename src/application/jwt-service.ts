@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import { InsertOneResult } from 'mongodb';
 import { randomUUID } from 'node:crypto';
 import { settings } from '../../settings';
+import { ExpiredTokenViewModel } from '../models/ExpiredTokenModels/ExpiredTokenViewModel';
 import { UserDBViewModel } from '../models/UserModels/UserDBViewModel';
 import { expiredTokensRepository } from '../repositories/expired-tokens-repository';
 
@@ -40,7 +41,7 @@ export const jwtService = {
   async createExpiredToken(token: string): Promise<InsertOneResult> {
     return expiredTokensRepository.createExpiredToken(token);
   },
-  async isTokenExpired(token: string): Promise<string | null> {
+  async isTokenExpired(token: string): Promise<ExpiredTokenViewModel | null> {
     return expiredTokensRepository.getExpiredToken(token);
   },
 };

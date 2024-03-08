@@ -1,6 +1,7 @@
 import { DeleteResult } from 'mongodb';
 import { v4 as uuidv4 } from 'uuid';
 import { blogsCollection, postsCollection } from '../database/database-config';
+import { BlogModel } from '../database/schemas';
 import { getBlogPaginationModel } from '../helpers/getBlogPaginationModel';
 import { getBlogViewModel } from '../helpers/getBlogViewModel';
 import { getPostPaginationModel } from '../helpers/getPostPaginationModel';
@@ -18,7 +19,7 @@ export const blogsRepository = {
     pageNumber: number,
     pageSize: number,
   ): Promise<PaginationBlogModel> {
-    const blogs = await blogsCollection.find({
+    const blogs = await BlogModel.find({
         name: {
           $regex: searchNameTerm ?? '',
           $options: 'i',
@@ -27,22 +28,22 @@ export const blogsRepository = {
       .sort({ [sortBy]: sortDirection === 'desc' ? -1 : 1 })
       .skip(pageSize * (pageNumber - 1))
       .limit(pageSize)
-      .toArray();
+      .lean();
     const totalDocuments = await blogsCollection.countDocuments({});
     const totalItems = searchNameTerm !== null ? blogs.length : totalDocuments;
     const pagesCount = Math.ceil(totalItems / pageSize);
     return getBlogPaginationModel(pageSize, pageNumber, pagesCount, totalItems, blogs);
   },
   async getBlogById(id: string): Promise<BlogViewModel | null> {
-    const foundBlog = await blogsCollection.findOne({ id });
+    const foundBlog = await BlogModel.findOne({ id });
     return foundBlog === null ? null : getBlogViewModel(foundBlog);
   },
   async createBlog(newBlog: BlogViewModel): Promise<BlogViewModel> {
-    await blogsCollection.insertOne(newBlog);
+    await BlogModel.create(newBlog);
     return getBlogViewModel(newBlog);
   },
   async updateBlogById(id: string, name: string, description: string, websiteUrl: string): Promise<boolean> {
-    const foundBlog = await blogsCollection.updateOne(
+    const foundBlog = await BlogModel.updateOne(
       { id },
       {
         $set: {
@@ -55,7 +56,7 @@ export const blogsRepository = {
     return foundBlog.matchedCount === 1;
   },
   async deleteBlogById(id: string): Promise<boolean> {
-    const foundBlog = await blogsCollection.deleteOne({ id });
+    const foundBlog = await BlogModel.deleteOne({ id });
     return foundBlog.deletedCount === 1;
   },
   async findPostsByBlogId(
@@ -84,7 +85,7 @@ export const blogsRepository = {
     shortDescription: string,
     content: string,
   ): Promise<PostViewModel | null> {
-    const foundBlog = await blogsCollection.findOne({ id: blogId });
+    const foundBlog = await BlogModel.findOne({ id: blogId });
     if (foundBlog) {
       const createdPost: PostViewModel = {
         id: uuidv4(),
@@ -106,7 +107,7 @@ export const blogsRepository = {
    * ONLY FOR E2E TESTS
    */
   async _deleteAllBlogs(): Promise<DeleteResult> {
-    return blogsCollection.deleteMany({});
+    return BlogModel.deleteMany({});
   },
   /**
    *
