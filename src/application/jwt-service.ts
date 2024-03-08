@@ -20,22 +20,13 @@ export const jwtService = {
       return null;
     }
   },
-  async createRefreshToken(user: UserDBViewModel, deviceId: string): Promise<any> {
+  async createRefreshToken(user: UserDBViewModel, deviceId: string = randomUUID()): Promise<any> {
     const currentDate = new Date();
     return jwt.sign({
       userId: user.id,
       lastActiveDate: currentDate,
       expireDate: new Date(currentDate.getTime() + 20 * 1000),
       deviceId,
-    }, settings.REFRESH_TOKEN_SECRET, { expiresIn: '1h' });
-  },
-  async createRefreshTokenWhileLogin(user: UserDBViewModel): Promise<any> {
-    const currentDate = new Date();
-    return jwt.sign({
-      userId: user.id,
-      lastActiveDate: currentDate,
-      expireDate: new Date(currentDate.getTime() + 20 * 1000),
-      deviceId: randomUUID(),
     }, settings.REFRESH_TOKEN_SECRET, { expiresIn: '1h' });
   },
   async verifyRefreshToken(token: string) {
