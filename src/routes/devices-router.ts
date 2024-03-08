@@ -10,7 +10,8 @@ export const devicesRouter = Router({});
 
 
 devicesRouter.get('/devices', validateRefreshToken, async (req: Request, res: Response<DeviceViewModel[]>) => {
-  const devices = await devicesService.getDevices();
+  const { userId } = req.user!;
+  const devices = await devicesService.getDevices(userId!);
     res.status(STATUS_CODES.OK).json(devices);
   },
 );

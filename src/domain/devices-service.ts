@@ -23,8 +23,8 @@ export const devicesService = {
     console.log('createDeviceService', 'newDevice', newDevice);
     return devicesRepository.createDevice(newDevice);
   },
-  async getDevices(): Promise<DeviceViewModel[]> {
-    return devicesRepository.getDevices();
+  async getDevices(userId: string): Promise<DeviceViewModel[]> {
+    return devicesRepository.getDevices(userId);
   },
   async getDeviceByIdAndActiveDate(lastActivateDate: Date, deviceId: string): Promise<DeviceViewModel | null> {
     return devicesRepository.getDeviceByIdAndActiveDate(lastActivateDate, deviceId);

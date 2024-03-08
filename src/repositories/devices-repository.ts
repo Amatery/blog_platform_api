@@ -9,8 +9,8 @@ export const devicesRepository = {
     await devicesCollection.insertOne(device);
     return getDeviceViewModel(device);
   },
-  async getDevices(): Promise<DeviceViewModel[]> {
-    const devices = await devicesCollection.find({}).toArray();
+  async getDevices(userId: string): Promise<DeviceViewModel[]> {
+    const devices = await devicesCollection.find({ userId }).toArray();
     return devices.map(device => getDeviceViewModel(device));
   },
   async getDeviceByIdAndActiveDate(lastActivateDate: Date, deviceId: string): Promise<DeviceViewModel | null> {
