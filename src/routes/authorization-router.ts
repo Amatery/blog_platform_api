@@ -91,6 +91,7 @@ authorizationRouter.post(
   inputValidationMiddleware,
   async (req: RequestWithBody<PasswordRecoveryInputModel>, res: Response) => {
     const { email } = req.body;
+    console.log('router email', email);
     const result = await authorizationService.sendRecoveryPasswordEmail(email);
     if (!result) {
       res.sendStatus(STATUS_CODES.NO_CONTENT);
