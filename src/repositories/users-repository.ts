@@ -72,7 +72,6 @@ export const usersRepository = {
     return foundUser.deletedCount === 1;
   },
   async findUserByLoginOrEmail(credentials: string): Promise<UserDBViewModel | null> {
-    console.log('findUserByLoginOrEmail credentials', credentials);
     return UserModel.findOne({ $or: [{ email: credentials }, { login: credentials }] });
   },
   async findUserByConfirmationCode(code: string): Promise<UserDBViewModel | null> {
@@ -96,14 +95,7 @@ export const usersRepository = {
   async updateRecoveryCode(user: UserDBViewModel): Promise<boolean> {
     const updatedUser = await UserModel.updateOne(
       { id: user.id },
-      {
-        $set: {
-          'recoveryPassword': {
-            'recoveryCode': randomUUID(),
-            'expirationDate': add(new Date(), { minutes: 5 }),
-          },
-        },
-      },
+      { $set: { 'recoveryPassword': { recoveryCode: randomUUID(), expirationDate: add(new Date(), { minutes: 5 }) } } },
     );
     return updatedUser.modifiedCount === 1;
   },
