@@ -1,6 +1,6 @@
-import nodemailer, { SentMessageInfo } from 'nodemailer'
-import { settings } from '../../settings'
-import { UserDBViewModel } from '../models/UserModels/UserDBViewModel'
+import nodemailer, { SentMessageInfo } from 'nodemailer';
+import { settings } from '../../settings';
+import { UserDBViewModel } from '../models/UserModels/UserDBViewModel';
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -22,5 +22,17 @@ export const emailAdapter = {
        <a href='${settings.CONFIRMATION_CODE_LINK}${user.emailConfirmation.confirmationCode}'>complete registration</a>
       </p>`,
     })
+  },
+  async sendRecoveryPasswordMessage(email: string, recoveryCode: string): Promise<SentMessageInfo> {
+    return transporter.sendMail({
+      from: `Blog platform API <${settings.PLATFORM_EMAIL}>`,
+      to: email,
+      subject: 'Password Recovery',
+      html: `
+        <h1>Password recovery</h1>
+       <p>To finish password recovery please follow the link below:
+       <a href='${settings.RECOVERY_PASSWORD_LINK}${recoveryCode}'>recovery password</a>
+      </p>`,
+    });
   },
 }

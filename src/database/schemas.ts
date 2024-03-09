@@ -49,6 +49,10 @@ export const UserSchema = new Schema<WithId<UserDBViewModel>>({
     expirationDate: { type: Date, required: true },
     isConfirmed: { type: Boolean, required: true },
   },
+  passwordRecovery: {
+    recoveryCode: { type: String, required: true },
+    expirationDate: { type: String, required: true },
+  },
 });
 
 export const DeviceSchema = new Schema<WithId<DeviceDBViewModel>>({

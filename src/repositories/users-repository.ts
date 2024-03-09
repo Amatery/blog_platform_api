@@ -44,30 +44,30 @@ export const usersRepository = {
       .sort({ [sortBy]: sortDirection === 'desc' ? -1 : 1 })
       .skip(pageSize * (pageNumber - 1))
       .limit(pageSize)
-      .lean()
+      .lean();
     const totalDocuments = await UserModel.countDocuments({});
-    const totalItems = searchLoginTerm !== null || searchEmailTerm !== null ? users.length : totalDocuments
-    const pagesCount = Math.ceil(totalDocuments / pageSize)
-    return getUserPaginationModel(pageSize, pageNumber, pagesCount, totalItems, users)
+    const totalItems = searchLoginTerm !== null || searchEmailTerm !== null ? users.length : totalDocuments;
+    const pagesCount = Math.ceil(totalDocuments / pageSize);
+    return getUserPaginationModel(pageSize, pageNumber, pagesCount, totalItems, users);
   },
   async getUserById(id: string): Promise<UserViewModel | null> {
     const foundUser = await UserModel.findOne({ id });
-    return foundUser === null ? null : getUserViewModel(foundUser)
+    return foundUser === null ? null : getUserViewModel(foundUser);
   },
   async _getUserAuthModel(id: string): Promise<UserAuthMeViewModel | null> {
     const foundUser = await UserModel.findOne({ id });
-    return foundUser === null ? null : getUserAuthMeViewModel(foundUser)
+    return foundUser === null ? null : getUserAuthMeViewModel(foundUser);
   },
   async _getUserDBModel(id: string): Promise<UserDBViewModel | null> {
     return UserModel.findOne({ id });
   },
   async createUser(user: UserDBViewModel): Promise<UserViewModel> {
     await UserModel.create(user);
-    return getUserViewModel(user)
+    return getUserViewModel(user);
   },
   async deleteUserById(id: string): Promise<boolean> {
     const foundUser = await UserModel.deleteOne({ id });
-    return foundUser.deletedCount === 1
+    return foundUser.deletedCount === 1;
   },
   async findUserByLoginOrEmail(credentials: string): Promise<UserDBViewModel | null> {
     return UserModel.findOne({ $or: [{ email: credentials }, { login: credentials }] });
@@ -75,13 +75,32 @@ export const usersRepository = {
   async findUserByConfirmationCode(code: string): Promise<any> {
     return UserModel.findOne({ 'emailConfirmation.confirmationCode': code });
   },
+  async findUserByRecoveryCode(recoveryCode: string): Promise<UserDBViewModel | null> {
+    return UserModel.findOne({ 'passwordRecovery.recoveryCode': recoveryCode });
+  },
   async updateEmailConfirmation(id: string): Promise<boolean> {
     const result = await UserModel.updateOne({ id }, { $set: { 'emailConfirmation.isConfirmed': true } });
-    return result.modifiedCount === 1
+    return result.modifiedCount === 1;
+  },
+  async updateRecoveryCode(email: string, recoveryCode: string, expirationDate: Date): Promise<boolean> {
+    const updatedUser = await UserModel.updateOne({ email }, {
+      $set: {
+        'passwordRecovery.recoveryCode': recoveryCode,
+        'passwordRecovery.expirationDate': expirationDate,
+      },
+    });
+    return updatedUser.modifiedCount === 1;
+  },
+  async updateUserPassword(recoveryCode: string, passwordSalt: string, passwordHash: string): Promise<boolean> {
+    const updatedUser = await UserModel.updateOne(
+      { 'passwordRecovery.recoveryCode': recoveryCode },
+      { $set: { passwordHash, passwordSalt } },
+    );
+    return updatedUser.modifiedCount === 1;
   },
   async generateNewConfirmationCode(email: string, code: string): Promise<boolean> {
     const result = await UserModel.updateOne({ email }, { $set: { 'emailConfirmation.confirmationCode': code } });
-    return result.modifiedCount === 1
+    return result.modifiedCount === 1;
   },
   /**
    * ONLY FOR E2E TESTS
@@ -92,4 +111,4 @@ export const usersRepository = {
   /**
    *
    */
-}
+};

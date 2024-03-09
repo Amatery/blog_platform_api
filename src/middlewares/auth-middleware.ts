@@ -4,6 +4,7 @@ import { jwtService } from '../application/jwt-service';
 import { devicesService } from '../domain/devices-service';
 import { usersService } from '../domain/users-service';
 import { STATUS_CODES } from '../helpers/StatusCodes';
+import { usersRepository } from '../repositories/users-repository';
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   const { authorization } = req.headers;
@@ -57,5 +58,27 @@ export const validateRefreshToken = async (req: Request, res: Response, next: Ne
       userId: decodedToken.userId,
       deviceId: decodedToken.deviceId,
     };
+  next();
+};
+
+
+export const isEmailExistsMiddleWare = async (req: Request, res: Response, next: NextFunction) => {
+  const { email } = req.body;
+  const user = await usersRepository.findUserByLoginOrEmail(email);
+  if (!user) {
+    res.sendStatus(STATUS_CODES.NO_CONTENT);
+    return;
+  }
+  next();
+};
+
+
+export const validateRecoveryCode = async (req: Request, res: Response, next: NextFunction) => {
+  const { recoveryCode } = req.body;
+  const result = await usersRepository.findUserByRecoveryCode(recoveryCode);
+  if (!result) {
+    res.sendStatus(STATUS_CODES.BAD_REQUEST);
+    return;
+  }
   next();
 };

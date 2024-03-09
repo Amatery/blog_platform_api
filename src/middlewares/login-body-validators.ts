@@ -1,4 +1,4 @@
-import { body } from 'express-validator'
+import { body } from 'express-validator';
 
 export const validateLoginOrEmail = body('loginOrEmail')
   .isString()
@@ -7,7 +7,7 @@ export const validateLoginOrEmail = body('loginOrEmail')
     min: 3,
     max: 10,
   })
-  .withMessage('Incorrect login or password')
+  .withMessage('Incorrect login or password');
 
 export const validatePassword = body('password')
   .isString()
@@ -16,4 +16,13 @@ export const validatePassword = body('password')
     min: 6,
     max: 20,
   })
-  .withMessage('Incorrect login or password')
+  .withMessage('Incorrect login or password');
+
+export const validateNewPassword = body('newPassword')
+  .notEmpty()
+  .isString()
+  .trim()
+  .isLength({
+    min: 6,
+    max: 20,
+  });

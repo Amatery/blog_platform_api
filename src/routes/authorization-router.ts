@@ -5,19 +5,25 @@ import { authorizationService } from '../domain/authorization-service';
 import { devicesService } from '../domain/devices-service';
 import { usersService } from '../domain/users-service';
 import { STATUS_CODES } from '../helpers/StatusCodes';
-import { authMiddleware, validateRefreshToken } from '../middlewares/auth-middleware';
+import {
+  authMiddleware,
+  isEmailExistsMiddleWare,
+  validateRecoveryCode,
+  validateRefreshToken,
+} from '../middlewares/auth-middleware';
 import { confirmationCodeValidationMiddleware } from '../middlewares/confirmation-code-validation-middleware';
 import {
   isEmailCorrectAndConfirmed,
   isEmailOrLoginAlreadyExist,
 } from '../middlewares/credentials-validation-middleware';
 import { inputValidationMiddleware } from '../middlewares/input-validation-middleware';
-import { validateLoginOrEmail, validatePassword } from '../middlewares/login-body-validators';
+import { validateLoginOrEmail, validateNewPassword, validatePassword } from '../middlewares/login-body-validators';
 import { rateLimitMiddleware } from '../middlewares/rate-limit-middleware';
 import { validateEmail, validateLogin } from '../middlewares/users-body-validators';
 import { AccessTokenInputModel } from '../models/AuthorizationModels/AccessTokenInputModel';
 import { LoginInputModel } from '../models/AuthorizationModels/LoginInputModel';
 import { LoginSuccessViewModel } from '../models/AuthorizationModels/LoginSuccessViewModel';
+import { PasswordRecoveryInputModel } from '../models/AuthorizationModels/PasswordRecoveryInputModel';
 import { RegistrationConfirmationInputModel } from '../models/AuthorizationModels/RegistrationConfirmationInputModel';
 import { RegistrationInputModel } from '../models/AuthorizationModels/RegistrationInputModel';
 import { UserAuthMeViewModel } from '../models/UserModels/UserAuthMeViewModel';
@@ -129,6 +135,42 @@ authorizationRouter.post(
     res.status(STATUS_CODES.OK)
       .cookie('refreshToken', refreshToken, refreshTokenOptions)
       .json(accessToken);
+  },
+);
+
+authorizationRouter.post(
+  '/password-recovery',
+  rateLimitMiddleware,
+  validateEmail,
+  isEmailExistsMiddleWare,
+  inputValidationMiddleware,
+  async (req: RequestWithBody<PasswordRecoveryInputModel>, res: Response) => {
+    const { email } = req.body;
+    const result = await authorizationService.updateRecoveryCode(email);
+    if (!result) {
+      res.sendStatus(STATUS_CODES.NO_CONTENT);
+      return;
+    }
+    res.sendStatus(STATUS_CODES.NO_CONTENT);
+    return;
+  },
+);
+
+authorizationRouter.post(
+  '/new-password',
+  rateLimitMiddleware,
+  validateNewPassword,
+  validateRecoveryCode,
+  inputValidationMiddleware,
+  async (req: RequestWithBody<any>, res: Response) => {
+    const { recoveryCode, newPassword } = req.body;
+    const result = await authorizationService.updateUserPassword(recoveryCode, newPassword);
+    if (!result) {
+      res.sendStatus(STATUS_CODES.BAD_REQUEST);
+      return;
+    }
+    res.sendStatus(STATUS_CODES.NO_CONTENT);
+    return;
   },
 );
 
