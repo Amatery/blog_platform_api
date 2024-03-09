@@ -17,12 +17,3 @@ export const validatePassword = body('password')
     max: 20,
   })
   .withMessage('Incorrect login or password');
-
-export const validateNewPassword = body('newPassword')
-  .notEmpty()
-  .isString()
-  .trim()
-  .isLength({
-    min: 6,
-    max: 20,
-  });

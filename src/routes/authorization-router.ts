@@ -5,24 +5,21 @@ import { authorizationService } from '../domain/authorization-service';
 import { devicesService } from '../domain/devices-service';
 import { usersService } from '../domain/users-service';
 import { STATUS_CODES } from '../helpers/StatusCodes';
-import {
-  authMiddleware,
-  isEmailExistsMiddleWare,
-  validateRecoveryCode,
-  validateRefreshToken,
-} from '../middlewares/auth-middleware';
+import { validateNewPassword, validateRecoveryCode } from '../middlewares/auth-body-validation-middleware';
+import { authMiddleware, isEmailExistsMiddleWare, validateRefreshToken } from '../middlewares/auth-middleware';
 import { confirmationCodeValidationMiddleware } from '../middlewares/confirmation-code-validation-middleware';
 import {
   isEmailCorrectAndConfirmed,
   isEmailOrLoginAlreadyExist,
 } from '../middlewares/credentials-validation-middleware';
 import { inputValidationMiddleware } from '../middlewares/input-validation-middleware';
-import { validateLoginOrEmail, validateNewPassword, validatePassword } from '../middlewares/login-body-validators';
+import { validateLoginOrEmail, validatePassword } from '../middlewares/login-body-validators';
 import { rateLimitMiddleware } from '../middlewares/rate-limit-middleware';
 import { validateEmail, validateLogin } from '../middlewares/users-body-validators';
 import { AccessTokenInputModel } from '../models/AuthorizationModels/AccessTokenInputModel';
 import { LoginInputModel } from '../models/AuthorizationModels/LoginInputModel';
 import { LoginSuccessViewModel } from '../models/AuthorizationModels/LoginSuccessViewModel';
+import { NewPasswordInputModel } from '../models/AuthorizationModels/NewPasswordInputModel';
 import { PasswordRecoveryInputModel } from '../models/AuthorizationModels/PasswordRecoveryInputModel';
 import { RegistrationConfirmationInputModel } from '../models/AuthorizationModels/RegistrationConfirmationInputModel';
 import { RegistrationInputModel } from '../models/AuthorizationModels/RegistrationInputModel';
@@ -162,7 +159,7 @@ authorizationRouter.post(
   validateNewPassword,
   validateRecoveryCode,
   inputValidationMiddleware,
-  async (req: RequestWithBody<any>, res: Response) => {
+  async (req: RequestWithBody<NewPasswordInputModel>, res: Response) => {
     const { recoveryCode, newPassword } = req.body;
     const result = await authorizationService.updateUserPassword(recoveryCode, newPassword);
     if (!result) {

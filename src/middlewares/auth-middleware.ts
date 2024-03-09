@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import { body } from 'express-validator';
 import { settings } from '../../settings';
 import { jwtService } from '../application/jwt-service';
 import { devicesService } from '../domain/devices-service';
@@ -72,17 +71,3 @@ export const isEmailExistsMiddleWare = async (req: Request, res: Response, next:
   }
   next();
 };
-
-export const validateRecoveryCode = body('recoveryCode')
-  .isString()
-  .notEmpty()
-  .custom(async (recoveryCode: string) => {
-    const user = await usersRepository.findUserByRecoveryCode(recoveryCode);
-    if (!user) {
-      throw new Error('Recovery code is incorrect');
-    }
-    if (user.passwordRecovery.recoveryCode !== recoveryCode && !(user.passwordRecovery.expirationDate > new Date())) {
-      throw new Error('Recovery code expired');
-    }
-    return true;
-  }).withMessage('Recovery code is incorrect!');
