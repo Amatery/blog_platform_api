@@ -62,6 +62,19 @@ export const validateRefreshToken = async (req: Request, res: Response, next: Ne
   next();
 };
 
+export const validateRecoveryCode = async (req: Request, res: Response, next: NextFunction) => {
+  const { recoveryCode } = req.body;
+  const user = await usersRepository.findUserByRecoveryCode(recoveryCode);
+  if (!user) {
+    res.sendStatus(STATUS_CODES.BAD_REQUEST);
+    return;
+  }
+  if (user.recoveryPassword.recoveryCode !== recoveryCode && !(user.recoveryPassword.expirationDate > new Date())) {
+    res.sendStatus(STATUS_CODES.BAD_REQUEST);
+  }
+  next();
+};
+
 export const validateNewPassword = body('newPassword')
   .isString()
   .trim()
@@ -69,17 +82,3 @@ export const validateNewPassword = body('newPassword')
     min: 6,
     max: 20,
   });
-
-export const validateRecoveryCode = body('recoveryCode')
-  .isString()
-  .notEmpty()
-  .custom(async (value) => {
-    const user = await usersRepository.findUserByRecoveryCode(value);
-    if (!user) {
-      throw new Error('Wrong code');
-    }
-    if (!user.recoveryPassword.recoveryCode === value && !(user.recoveryPassword.expirationDate > new Date())) {
-      throw new Error('Expired code');
-    }
-    return true;
-  }).withMessage('Code is incorrect');
