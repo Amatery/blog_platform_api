@@ -1,9 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
+import { body } from 'express-validator';
 import { settings } from '../../settings';
 import { jwtService } from '../application/jwt-service';
 import { devicesService } from '../domain/devices-service';
 import { usersService } from '../domain/users-service';
 import { STATUS_CODES } from '../helpers/StatusCodes';
+import { usersRepository } from '../repositories/users-repository';
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   const { authorization } = req.headers;
@@ -59,3 +61,25 @@ export const validateRefreshToken = async (req: Request, res: Response, next: Ne
     };
   next();
 };
+
+export const validateNewPassword = body('newPassword')
+  .isString()
+  .trim()
+  .isLength({
+    min: 6,
+    max: 20,
+  });
+
+export const validateRecoveryCode = body('recoveryCode')
+  .isString()
+  .notEmpty()
+  .custom(async (value) => {
+    const user = await usersRepository.findUserByRecoveryCode(value);
+    if (!user) {
+      throw new Error('Wrong code');
+    }
+    if (!user.recoveryPassword.recoveryCode === value && !(user.recoveryPassword.expirationDate > new Date())) {
+      throw new Error('Expired code');
+    }
+    return true;
+  }).withMessage('Code is incorrect');

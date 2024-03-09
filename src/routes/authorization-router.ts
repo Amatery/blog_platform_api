@@ -5,7 +5,12 @@ import { authorizationService } from '../domain/authorization-service';
 import { devicesService } from '../domain/devices-service';
 import { usersService } from '../domain/users-service';
 import { STATUS_CODES } from '../helpers/StatusCodes';
-import { authMiddleware, validateRefreshToken } from '../middlewares/auth-middleware';
+import {
+  authMiddleware,
+  validateNewPassword,
+  validateRecoveryCode,
+  validateRefreshToken,
+} from '../middlewares/auth-middleware';
 import { confirmationCodeValidationMiddleware } from '../middlewares/confirmation-code-validation-middleware';
 import {
   isEmailCorrectAndConfirmed,
@@ -14,7 +19,7 @@ import {
 import { inputValidationMiddleware } from '../middlewares/input-validation-middleware';
 import { validateLoginOrEmail, validatePassword } from '../middlewares/login-body-validators';
 import { rateLimitMiddleware } from '../middlewares/rate-limit-middleware';
-import { validateEmail, validateLogin, validateNewPassword } from '../middlewares/users-body-validators';
+import { validateEmail, validateLogin } from '../middlewares/users-body-validators';
 import { AccessTokenInputModel } from '../models/AuthorizationModels/AccessTokenInputModel';
 import { LoginInputModel } from '../models/AuthorizationModels/LoginInputModel';
 import { LoginSuccessViewModel } from '../models/AuthorizationModels/LoginSuccessViewModel';
@@ -106,6 +111,7 @@ authorizationRouter.post(
   '/new-password',
   rateLimitMiddleware,
   validateNewPassword,
+  validateRecoveryCode,
   inputValidationMiddleware,
   async (req: RequestWithBody<NewPasswordInputModel>, res: Response) => {
     const { newPassword, recoveryCode } = req.body;

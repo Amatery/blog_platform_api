@@ -80,19 +80,9 @@ export const authorizationService = {
     return emailManager.sendRecoveryPassword(user.email, updatedRecoveryInfo.recoveryCode);
   },
   async updateUserPassword(newPassword: string, recoveryCode: string): Promise<boolean> {
-    const user = await usersRepository.findUserByRecoveryCode(recoveryCode);
-    if (!user) {
-      return false;
-    }
-    if (user.recoveryPassword.recoveryCode !== recoveryCode) {
-      return false;
-    }
-    if (user.recoveryPassword.expirationDate < new Date()) {
-      return false;
-    }
     const passwordSalt = await bcrypt.genSalt(10);
     const passwordHash = await this._generateHash(newPassword, passwordSalt);
-    return usersRepository.updateUserPassword(user.id, passwordHash, passwordSalt);
+    return usersRepository.updateUserPassword(recoveryCode, passwordHash, passwordSalt);
   },
   async createUser(login: string, email: string, password: string): Promise<UserDBViewModel> {
     const passwordSalt = await bcrypt.genSalt(10);

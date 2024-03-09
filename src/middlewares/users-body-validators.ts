@@ -21,14 +21,6 @@ export const validatePassword = body('password')
 export const validateEmail = body('email')
   .isString()
   .trim()
+  .isLength({ min: 1 })
   .isEmail()
   .matches('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$');
-
-
-export const validateNewPassword = body('newPassword')
-  .isString()
-  .trim()
-  .isLength({
-    min: 6,
-    max: 20,
-  });

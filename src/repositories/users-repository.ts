@@ -79,8 +79,12 @@ export const usersRepository = {
   async findUserByRecoveryCode(code: string): Promise<UserDBViewModel | null> {
     return UserModel.findOne({ 'recoveryPassword.recoveryCode': code });
   },
-  async updateUserPassword(id: string, passwordHash: string, passwordSalt: string): Promise<boolean> {
-    const updatedUser = await UserModel.updateOne({ id }, { $set: { passwordHash, passwordSalt } });
+  async updateUserPassword(recoveryCode: string, passwordHash: string, passwordSalt: string): Promise<boolean> {
+    const user = await UserModel.findOne({ 'recoveryPassword.recoveryCode': recoveryCode });
+    if (!user) {
+      return false;
+    }
+    const updatedUser = await UserModel.updateOne({ id: user.id }, { $set: { passwordHash, passwordSalt } });
     return updatedUser.modifiedCount === 1;
   },
   async updateEmailConfirmation(id: string): Promise<boolean> {
