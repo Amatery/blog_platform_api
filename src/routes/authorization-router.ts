@@ -94,7 +94,7 @@ authorizationRouter.post(
     console.log('router email', email);
     const result = await authorizationService.sendRecoveryPasswordEmail(email);
     if (!result) {
-      res.sendStatus(STATUS_CODES.NO_CONTENT);
+      res.sendStatus(STATUS_CODES.BAD_REQUEST);
       return;
     }
     res.sendStatus(STATUS_CODES.NO_CONTENT);

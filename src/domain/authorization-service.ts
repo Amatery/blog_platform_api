@@ -60,29 +60,24 @@ export const authorizationService = {
     }
     return user;
   },
-  async sendRecoveryPasswordEmail(email: string): Promise<UserDBViewModel | boolean> {
+  async sendRecoveryPasswordEmail(email: string): Promise<boolean | SentMessageInfo> {
     const user = await usersRepository.findUserByLoginOrEmail(email);
-    console.log('sendRecoveryPasswordEmail', user);
     if (!user) {
       return false;
     }
-    const updatedRecoveryInfo = await usersRepository.updateRecoveryCode(user);
-    console.log('updatedRecoveryInfo', updatedRecoveryInfo);
-    if (!updatedRecoveryInfo) {
+    const updatedRecoveryInfo = {
+      recoveryCode: randomUUID(),
+      expirationDate: add(new Date(), { minutes: 5 }),
+    };
+    const updatedRecoveryData = await usersRepository.updateRecoveryCode(
+      user.id,
+      updatedRecoveryInfo.recoveryCode,
+      updatedRecoveryInfo.expirationDate,
+    );
+    if (!updatedRecoveryData) {
       return false;
     }
-    const updatedUser = await usersRepository.findUserByLoginOrEmail(email);
-    console.log('updatedUser', updatedUser);
-    if (!updatedUser) {
-      return false;
-    }
-    try {
-      await emailManager.sendRecoveryPassword(updatedUser);
-    } catch (e) {
-      console.log('error in send email', e);
-      return false;
-    }
-    return updatedUser;
+    return emailManager.sendRecoveryPassword(user.email, updatedRecoveryInfo.recoveryCode);
   },
   async updateUserPassword(newPassword: string, recoveryCode: string): Promise<boolean> {
     const user = await usersRepository.findUserByRecoveryCode(recoveryCode);
