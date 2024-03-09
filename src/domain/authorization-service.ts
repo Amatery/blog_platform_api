@@ -62,24 +62,20 @@ export const authorizationService = {
   },
   async sendRecoveryPasswordEmail(email: string): Promise<UserDBViewModel | boolean> {
     const user = await usersRepository.findUserByLoginOrEmail(email);
-    console.log('sendRecoveryPasswordEmail', user);
     if (!user) {
       return false;
     }
     const updatedRecoveryInfo = await usersRepository.updateRecoveryCode(user);
-    console.log('updatedRecoveryInfo', updatedRecoveryInfo);
     if (!updatedRecoveryInfo) {
       return false;
     }
     const updatedUser = await usersRepository.findUserByLoginOrEmail(email);
-    console.log('updatedUser', updatedUser);
     if (!updatedUser) {
       return false;
     }
     try {
       await emailManager.sendRecoveryPassword(updatedUser);
     } catch (e) {
-      console.log('error in send email', e);
       return false;
     }
     return updatedUser;
