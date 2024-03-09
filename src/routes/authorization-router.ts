@@ -96,7 +96,7 @@ authorizationRouter.post(
       res.sendStatus(STATUS_CODES.NO_CONTENT);
       return;
     }
-    res.sendStatus(STATUS_CODES.OK);
+    res.sendStatus(STATUS_CODES.NO_CONTENT);
     return;
   },
 );
