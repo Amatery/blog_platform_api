@@ -1,4 +1,6 @@
+import { add } from 'date-fns';
 import { DeleteResult } from 'mongodb';
+import { randomUUID } from 'node:crypto';
 import { UserModel } from '../database/schemas';
 import { getUserAuthMeViewModel } from '../helpers/getUserAuthMeViewModel';
 import { getUserPaginationModel } from '../helpers/getUserPaginationModel';
@@ -91,13 +93,15 @@ export const usersRepository = {
     const result = await UserModel.updateOne({ email }, { $set: { 'emailConfirmation.confirmationCode': code } });
     return result.modifiedCount === 1;
   },
-  async updateRecoveryCode(id: string, recoveryCode: string, expirationDate: Date): Promise<boolean> {
+  async updateRecoveryCode(user: UserDBViewModel): Promise<boolean> {
     const updatedUser = await UserModel.updateOne(
-      { id },
+      { id: user.id },
       {
         $set: {
-          'recoveryPassword.recoveryCode': recoveryCode,
-          'recoveryPassword.expirationDate': expirationDate,
+          'recoveryPassword': {
+            'recoveryCode': randomUUID(),
+            'expirationDate': add(new Date(), { minutes: 5 }),
+          },
         },
       },
     );

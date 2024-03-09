@@ -23,15 +23,15 @@ export const emailAdapter = {
       </p>`,
     });
   },
-  async sendRecoveryPassword(email: string, recoveryCode: string): Promise<SentMessageInfo> {
+  async sendRecoveryPassword(user: UserDBViewModel): Promise<SentMessageInfo> {
     return transporter.sendMail({
       from: `Blog platform API <${settings.PLATFORM_EMAIL}>`,
-      to: email,
+      to: user.email,
       subject: 'Password recovery',
       html: `
         <h1>Password recovery</h1>
        <p>To finish password recovery please follow the link below:
-       <a href='${settings.RECOVERY_PASSWORD_LINK}${recoveryCode}'>recovery password</a>
+       <a href='${settings.RECOVERY_PASSWORD_LINK}${user.recoveryPassword.recoveryCode}'>recoveryPassword</a>
       </p>`,
     });
   },

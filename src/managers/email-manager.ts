@@ -4,9 +4,9 @@ import { UserDBViewModel } from '../models/UserModels/UserDBViewModel';
 
 export const emailManager = {
   async sendConfirmationMessage(user: UserDBViewModel): Promise<SentMessageInfo> {
-    return emailAdapter.sendConfirmationMessage(user);
+    return emailAdapter.sendConfirmationMessage(user)
   },
-  async sendRecoveryPassword(email: string, recoveryCode: string): Promise<SentMessageInfo> {
-    return emailAdapter.sendRecoveryPassword(email, recoveryCode);
+  async sendRecoveryPassword(user: UserDBViewModel): Promise<SentMessageInfo> {
+    return emailAdapter.sendRecoveryPassword(user);
   },
-};
+}
