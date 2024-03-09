@@ -1,4 +1,4 @@
-import { ObjectId } from 'mongodb'
+import { ObjectId } from 'mongodb';
 
 export type UserDBViewModel = {
   /**
@@ -19,5 +19,9 @@ export type UserDBViewModel = {
     confirmationCode: string,
     expirationDate: Date,
     isConfirmed: boolean
+  }
+  recoveryPassword: {
+    recoveryCode: string,
+    expirationDate: Date,
   }
 }

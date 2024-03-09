@@ -14,10 +14,12 @@ import {
 import { inputValidationMiddleware } from '../middlewares/input-validation-middleware';
 import { validateLoginOrEmail, validatePassword } from '../middlewares/login-body-validators';
 import { rateLimitMiddleware } from '../middlewares/rate-limit-middleware';
-import { validateEmail, validateLogin } from '../middlewares/users-body-validators';
+import { validateEmail, validateLogin, validateNewPassword } from '../middlewares/users-body-validators';
 import { AccessTokenInputModel } from '../models/AuthorizationModels/AccessTokenInputModel';
 import { LoginInputModel } from '../models/AuthorizationModels/LoginInputModel';
 import { LoginSuccessViewModel } from '../models/AuthorizationModels/LoginSuccessViewModel';
+import { NewPasswordInputModel } from '../models/AuthorizationModels/NewPasswordInputModel';
+import { PasswordRecoveryInputModel } from '../models/AuthorizationModels/PasswordRecoveryInputModel';
 import { RegistrationConfirmationInputModel } from '../models/AuthorizationModels/RegistrationConfirmationInputModel';
 import { RegistrationInputModel } from '../models/AuthorizationModels/RegistrationInputModel';
 import { UserAuthMeViewModel } from '../models/UserModels/UserAuthMeViewModel';
@@ -73,6 +75,40 @@ authorizationRouter.post(
   async (req: RequestWithBody<RegistrationConfirmationInputModel>, res: Response) => {
     const { email } = req.body;
     const result = await authorizationService.resendEmailConfirmation(email);
+    if (!result) {
+      res.sendStatus(STATUS_CODES.BAD_REQUEST);
+      return;
+    }
+    res.sendStatus(STATUS_CODES.NO_CONTENT);
+    return;
+  },
+);
+
+authorizationRouter.post(
+  '/password-recovery',
+  rateLimitMiddleware,
+  validateEmail,
+  inputValidationMiddleware,
+  async (req: RequestWithBody<PasswordRecoveryInputModel>, res: Response) => {
+    const { email } = req.body;
+    const result = await authorizationService.sendRecoveryPasswordEmail(email);
+    if (!result) {
+      res.sendStatus(STATUS_CODES.NO_CONTENT);
+      return;
+    }
+    res.sendStatus(STATUS_CODES.OK);
+    return;
+  },
+);
+
+authorizationRouter.post(
+  '/new-password',
+  rateLimitMiddleware,
+  validateNewPassword,
+  inputValidationMiddleware,
+  async (req: RequestWithBody<NewPasswordInputModel>, res: Response) => {
+    const { newPassword, recoveryCode } = req.body;
+    const result = await authorizationService.updateUserPassword(newPassword, recoveryCode);
     if (!result) {
       res.sendStatus(STATUS_CODES.BAD_REQUEST);
       return;

@@ -1,6 +1,6 @@
-import nodemailer, { SentMessageInfo } from 'nodemailer'
-import { settings } from '../../settings'
-import { UserDBViewModel } from '../models/UserModels/UserDBViewModel'
+import nodemailer, { SentMessageInfo } from 'nodemailer';
+import { settings } from '../../settings';
+import { UserDBViewModel } from '../models/UserModels/UserDBViewModel';
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -8,7 +8,7 @@ const transporter = nodemailer.createTransport({
     user: settings.PLATFORM_EMAIL,
     pass: settings.PLATFORM_GMAIL_APP_PASSWORD,
   },
-})
+});
 
 export const emailAdapter = {
   async sendConfirmationMessage(user: UserDBViewModel): Promise<SentMessageInfo> {
@@ -21,6 +21,18 @@ export const emailAdapter = {
        <p>To finish registration please follow the link below:
        <a href='${settings.CONFIRMATION_CODE_LINK}${user.emailConfirmation.confirmationCode}'>complete registration</a>
       </p>`,
-    })
+    });
   },
-}
+  async sendRecoveryPassword(user: UserDBViewModel): Promise<SentMessageInfo> {
+    return transporter.sendMail({
+      from: `Blog platform API <${settings.PLATFORM_EMAIL}>`,
+      to: user.email,
+      subject: 'Password recovery',
+      html: `
+        <h1>Password recovery</h1>
+       <p>To finish password recovery please follow the link below:
+       <a href='${settings.RECOVERY_PASSWORD_LINK}${user.recoveryPassword.recoveryCode}'>recoveryPassword</a>
+      </p>`,
+    });
+  },
+};
