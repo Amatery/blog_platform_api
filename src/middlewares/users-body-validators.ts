@@ -1,4 +1,4 @@
-import { body } from 'express-validator';
+import { body } from 'express-validator'
 
 export const validateLogin = body('login')
   .isString()
@@ -22,4 +22,4 @@ export const validateEmail = body('email')
   .isString()
   .trim()
   .isEmail()
-// .matches('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$')
+  .matches('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$')
