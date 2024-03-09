@@ -142,8 +142,8 @@ authorizationRouter.post(
   '/password-recovery',
   rateLimitMiddleware,
   validateEmail,
-  isEmailExistsMiddleWare,
   inputValidationMiddleware,
+  isEmailExistsMiddleWare,
   async (req: RequestWithBody<PasswordRecoveryInputModel>, res: Response) => {
     const { email } = req.body;
     const result = await authorizationService.updateRecoveryCode(email);
