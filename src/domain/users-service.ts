@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import { add } from 'date-fns';
 import { DeleteResult } from 'mongodb';
-import { randomUUID } from 'node:crypto';
+import { v4 as uuidv4 } from 'uuid';
 import { PaginationUserModel } from '../models/UserModels/PaginationUserModel';
 import { UserAuthMeViewModel } from '../models/UserModels/UserAuthMeViewModel';
 import { UserDBViewModel } from '../models/UserModels/UserDBViewModel';
@@ -24,51 +24,47 @@ export const usersService = {
       sortDirection,
       pageNumber,
       pageSize,
-    );
+    )
   },
   async getUserById(id: string): Promise<UserViewModel | null> {
-    return usersRepository.getUserById(id);
+    return usersRepository.getUserById(id)
   },
   async _getUserAuthModel(id: string): Promise<UserAuthMeViewModel | null> {
     return usersRepository._getUserAuthModel(id);
   },
   async _getUserDBModel(id: string): Promise<UserDBViewModel | null> {
-    return usersRepository._getUserDBModel(id);
+    return usersRepository._getUserDBModel(id)
   },
   async createUser(login: string, password: string, email: string): Promise<UserViewModel> {
-    const passwordSalt = await bcrypt.genSalt(10);
-    const passwordHash = await this._generateHash(password, passwordSalt);
+    const passwordSalt = await bcrypt.genSalt(10)
+    const passwordHash = await this._generateHash(password, passwordSalt)
     const newUser = {
-      id: randomUUID(),
+      id: uuidv4(),
       login,
       passwordHash,
       passwordSalt,
       email,
       createdAt: new Date().toISOString(),
       emailConfirmation: {
-        confirmationCode: randomUUID(),
+        confirmationCode: uuidv4(),
         expirationDate: add(new Date(), {
           hours: 1,
           minutes: 30,
         }),
         isConfirmed: false,
       },
-      recoveryPassword: {
-        recoveryCode: randomUUID(),
-        expirationDate: add(new Date, { minutes: 5 }),
-      },
-    };
-    return usersRepository.createUser(newUser);
+    }
+    return usersRepository.createUser(newUser)
   },
   async deleteUserById(id: string) {
-    return usersRepository.deleteUserById(id);
+    return usersRepository.deleteUserById(id)
   },
   async _generateHash(password: string, salt: string) {
-    return bcrypt.hash(password, salt);
+    return bcrypt.hash(password, salt)
   },
   /** ONLY FOR E2E TESTS **/
   async _deleteAllUsers(): Promise<DeleteResult> {
-    return usersRepository._deleteAllUsers();
+    return usersRepository._deleteAllUsers()
   },
   /**             **/
-};
+}
